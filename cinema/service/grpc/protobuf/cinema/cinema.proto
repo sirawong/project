@@ -1,0 +1,31 @@
+syntax="proto3";
+
+option go_package = "/cinema";
+
+package cinema;
+
+service CinemaService {
+    rpc GetCinemas (CinemaRequest) returns (CinemaReply);
+}
+
+message CinemaRequest {
+    repeated string cinemaIds = 1;
+}
+
+message CinemaReply {
+    repeated Cinema cinema = 1;
+}
+
+message Cinema {
+    string cinemaId = 1;
+    string name = 2;
+    int32 ticketPrice = 3; 
+    string city = 4;
+    int32 seatsAvailable = 5;
+    string image = 6;
+    repeated Seat seats = 7;
+}
+
+message Seat {
+    repeated int32 seat = 1;
+}

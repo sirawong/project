@@ -1,0 +1,7 @@
+note.txt
+.vscode
+node_modules
+Makefile
+elk
+pg_data
+mongo_data

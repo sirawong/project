@@ -1,0 +1,126 @@
+version: '3.8'
+
+services:
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    container_name: mongo
+    volumes:
+      - ./mongo_data:/data/db
+
+  user: 
+    build: 
+      context: ./user
+      dockerfile: Dockerfile
+    image: siraphopdocker/user
+    ports:
+      - 8081:8080
+    environment:
+      APP_PORT: :8080
+      MONGODB_ENDPOINT: mongodb://mongo:27017
+      MONGODB_NAME: movie-booking
+      MONGODB_COLLECTION: user
+      JWT_SECRET: 'ffsdlfk#sd/'
+      GRPC_HOST: :5000
+      PHOTO_URL: http://media:9000/media/upload
+    depends_on:
+      - mongo
+  
+  cinema: 
+    build: 
+      context: ./cinema
+      dockerfile: Dockerfile
+    image: siraphopdocker/cinema
+    ports:
+      - 8082:8080
+    environment:
+      APP_PORT: :8080
+      MONGODB_ENDPOINT: mongodb://mongo:27017
+      MONGODB_NAME: movie-booking
+      MONGODB_COLLECTION: cinema
+      GRPC_HOST: :5001
+      GRPC_AUTH_HOST: user:5000
+      PHOTO_URL: http://media:9000/media/upload
+    depends_on:
+      - mongo
+      - user
+  
+  movie: 
+    build: 
+      context: ./movie/
+      dockerfile: Dockerfile
+    image: siraphopdocker/movie
+    ports:
+      - 8083:8080
+    environment:
+      APP_PORT: :8080
+      MONGODB_ENDPOINT: mongodb://mongo:27017
+      MONGODB_NAME: movie-booking
+      MONGODB_COLLECTION: movie
+      GRPC_AUTH_HOST: user:5000
+      PHOTO_URL: http://media:9000/media/upload
+    depends_on:
+      - mongo
+      - user
+  
+  reservation: 
+    build: 
+      context: ./reservation/
+      dockerfile: Dockerfile
+    image: siraphopdocker/reservation
+    ports:
+      - 8084:8080
+    environment:
+      APP_PORT: :8080
+      APP_URL: :8004/checkin
+      MONGODB_ENDPOINT: mongodb://mongo:27017
+      MONGODB_NAME: movie-booking
+      MONGODB_COLLECTION: reservation
+      GRPC_HOST: :5002
+      GRPC_AUTH_HOST: user:5000
+      GRPC_CINEMA_HOST: cinema:5001
+    depends_on:
+      - mongo
+      - user
+      - cinema
+  
+  showtime: 
+    build:
+      context: ./showtime/
+      dockerfile: Dockerfile
+    image: siraphopdocker/showtime
+    ports:
+      - 8085:8080
+    environment:
+      APP_PORT: :8080
+      MONGODB_ENDPOINT: mongodb://mongo:27017
+      MONGODB_NAME: movie-booking
+      MONGODB_COLLECTION: showtime
+      GRPC_AUTH_HOST: user:5000
+    depends_on:
+      - mongo
+      - user
+  
+  media:
+    build: 
+      context: ./media
+      dockerfile: Dockerfile
+    image: siraphopdocker/media
+    ports:
+      - 9000:9000
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args: 
+        REACT_APP_BASE_URL: http://movie.dev.whoisusefor.tk/api
+    image: siraphopdocker/movie-booking
+    ports:
+      - 8080:80
+    # environment:
+      # REACT_APP_BASE_URL: http://movie.dev.whoisusefor.tk/api
+      # REACT_APP_BASE_URL: http://user

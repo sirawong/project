@@ -1,0 +1,6 @@
+.firebase*
+build
+firebase*
+Dockerfile
+.dockerignore
+node_modules/
