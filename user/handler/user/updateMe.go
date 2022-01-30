@@ -31,6 +31,12 @@ func (ctrl *Controller) UpdateMe(c *gin.Context) {
 		return
 	}
 
+	role := c.GetString("role")
+	if role == "superadmin" {
+		view.HandleError(c.Writer, errors.New("admin not allow to update yourself"))
+		return
+	}
+
 	input := &input.UserInput{
 		ID: userId,
 	}

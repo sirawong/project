@@ -83,4 +83,20 @@ func TestUpdateMe(t *testing.T) {
 
 		assert.Equal(t, http.StatusInternalServerError, ctx.Writer.Status())
 	})
+
+	t.Run("Error: json invalid", func(t *testing.T) {
+		userSrv := &mocksUser.Service{}
+		ctrl := controller.New(userSrv)
+
+		ctx, router := gin.CreateTestContext(httptest.NewRecorder())
+		router.PATCH("/users/me", ctrl.UpdateMe)
+		ctx.Request, err = request.MakeUpdateMeReqInvalidJSON(mockInput)
+		assert.Nil(t, err)
+
+		ctx.Set("userid", mockInput.ID)
+		ctx.Set("role", "superadmin")
+		ctrl.UpdateMe(ctx)
+
+		assert.Equal(t, http.StatusInternalServerError, ctx.Writer.Status())
+	})
 }

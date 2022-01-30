@@ -2,20 +2,20 @@ version: '3.8'
 
 services:
 
-  mongo:
-    image: mongo
-    restart: always
-    ports:
-      - 27017:27017
-    container_name: mongo
-    volumes:
-      - ./mongo_data:/data/db
+  # mongo:
+  #   image: mongo
+  #   restart: always
+  #   ports:
+  #     - 27017:27017
+  #   container_name: mongo
+  #   volumes:
+  #     - ./mongo_data:/data/db
 
   user: 
     build: 
       context: ./user
       dockerfile: Dockerfile
-    image: siraphopdocker/user
+    image: asia.gcr.io/movie-app-339412/movie-user:dev
     ports:
       - 8081:8080
     environment:
@@ -33,7 +33,7 @@ services:
     build: 
       context: ./cinema
       dockerfile: Dockerfile
-    image: siraphopdocker/cinema
+    image: asia.gcr.io/movie-app-339412/movie-cinema:dev
     ports:
       - 8082:8080
     environment:
@@ -52,7 +52,7 @@ services:
     build: 
       context: ./movie/
       dockerfile: Dockerfile
-    image: siraphopdocker/movie
+    image: asia.gcr.io/movie-app-339412/movie-movie:dev
     ports:
       - 8083:8080
     environment:
@@ -70,7 +70,7 @@ services:
     build: 
       context: ./reservation/
       dockerfile: Dockerfile
-    image: siraphopdocker/reservation
+    image: asia.gcr.io/movie-app-339412/movie-reservation:dev
     ports:
       - 8084:8080
     environment:
@@ -91,7 +91,7 @@ services:
     build:
       context: ./showtime/
       dockerfile: Dockerfile
-    image: siraphopdocker/showtime
+    image: asia.gcr.io/movie-app-339412/movie-showtime:dev
     ports:
       - 8085:8080
     environment:
@@ -108,7 +108,7 @@ services:
     build: 
       context: ./media
       dockerfile: Dockerfile
-    image: siraphopdocker/media
+    image: asia.gcr.io/movie-app-339412/movie-media:dev
     ports:
       - 9000:9000
 
@@ -117,8 +117,8 @@ services:
       context: ./client
       dockerfile: Dockerfile
       args: 
-        REACT_APP_BASE_URL: http://movie.dev.whoisusefor.tk/api
-    image: siraphopdocker/movie-booking
+        REACT_APP_BASE_URL: http://movie.api.whoisusefor.tk
+    image: asia.gcr.io/movie-app-339412/movie-booking:dev
     ports:
       - 8080:80
     # environment:

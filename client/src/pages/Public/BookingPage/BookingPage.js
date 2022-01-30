@@ -289,7 +289,7 @@ class BookingPage extends Component {
     if (!invitations) return;
     try {
       const token = localStorage.getItem('jwtToken');
-      const url = process.env.REACT_APP_BASE_URL + '/reservations/invitations';
+      const url = process.env.REACT_APP_BASE_URL + '/reservations/reservations/invitations';
       const response = await fetch(url, {
         method: 'POST',
         headers: {

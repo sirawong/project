@@ -6,8 +6,8 @@ type Config struct {
 	AppPort string `env:"APP_PORT" envDefault:":8080"`
 
 	MongoDBEndpoint   string `env:"MONGODB_ENDPOINT" envDefault:"mongodb://localhost:27017"`
-	MongoDBName       string `env:"MONGODB_NAME" envDefault:"movie-booking"`
-	MongoDBCollection string `env:"MONGODB_COLLECTION" envDefault:"users"`
+	MongoDBName       string `env:"MONGODB_NAME" envDefault:"movie-dev"`
+	MongoDBCollection string `env:"MONGODB_COLLECTION" envDefault:"user"`
 
 	PhotoUrl string `env:"PHOTO_URL" envDefault:"http://localhost:9000/media/upload"`
 

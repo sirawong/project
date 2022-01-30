@@ -5,3 +5,4 @@ Makefile
 elk
 pg_data
 mongo_data
+keyfile.json

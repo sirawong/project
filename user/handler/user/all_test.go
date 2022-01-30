@@ -31,7 +31,7 @@ func TestAll(t *testing.T) {
 		ctx.Request, err = request.MakeAllReq(mockInput)
 		assert.Nil(t, err)
 
-		userSrv.On("List", mock.Anything, mockInput).Return(user, nil)
+		userSrv.On("All", mock.Anything).Return(user, nil)
 
 		ctrl.All(ctx)
 
@@ -47,7 +47,7 @@ func TestAll(t *testing.T) {
 		ctx.Request, err = request.MakeAllReq(mockInput)
 		assert.Nil(t, err)
 
-		userSrv.On("List", mock.Anything, mockInput).Return(nil, errors.New("error"))
+		userSrv.On("All", mock.Anything).Return(nil, errors.New("error"))
 
 		ctrl.All(ctx)
 

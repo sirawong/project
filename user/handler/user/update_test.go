@@ -30,7 +30,7 @@ func TestUpdate(t *testing.T) {
 		ctx.Request, err = request.MakeUpdateReq(ctx, mockInput)
 		assert.Nil(t, err)
 
-		ctx.Set("userid", mockInput.ID)
+		ctx.Set("userid", "456")
 		userSrv.On("Update", mock.Anything, mock.Anything).Return(mockOutput, nil)
 
 		ctrl.Update(ctx)
@@ -47,7 +47,7 @@ func TestUpdate(t *testing.T) {
 		ctx.Request, err = request.MakeUpdateReq(ctx, mockInput)
 		assert.Nil(t, err)
 
-		ctx.Set("userid", mockInput.ID)
+		ctx.Set("userid", "456")
 		userSrv.On("Update", mock.Anything, mock.Anything).Return(nil, errors.New("error"))
 
 		ctrl.Update(ctx)
@@ -63,6 +63,24 @@ func TestUpdate(t *testing.T) {
 		router.PATCH("/users/:id", ctrl.Update)
 		ctx.Request, err = request.MakeUpdateReqInvalidJSON(mockInput)
 		assert.Nil(t, err)
+		
+		ctx.Set("userid", "456")
+
+		ctrl.Update(ctx)
+
+		assert.Equal(t, http.StatusInternalServerError, ctx.Writer.Status())
+	})
+
+	t.Run("Error: user admin", func(t *testing.T) {
+		userSrv := &mocksUser.Service{}
+		ctrl := controller.New(userSrv)
+
+		ctx, router := gin.CreateTestContext(httptest.NewRecorder())
+		router.PATCH("/users/:id", ctrl.Update)
+		ctx.Request, err = request.MakeUpdateReq(ctx, mockInput)
+		assert.Nil(t, err)
+		
+		ctx.Set("userid", mockInput.ID)
 
 		ctrl.Update(ctx)
 

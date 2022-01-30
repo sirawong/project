@@ -71,3 +71,20 @@ export MONGODB_ROOT_PASSWORD=$(kubectl get secret movie-dev-mongodb-secret \
 kubectl run mongodb-client --rm --tty -i --restart='Never' --image bitnami/mongodb:4.4.4-debian-10-r27 \
   --command -- mongo admin --host movie-dev-mongodb --authenticationDatabase admin \
   -u root -p $MONGODB_ROOT_PASSWORD
+
+
+helm install -f ~/k8s/users/helm-values/*.yaml movie-users-dev ~/k8s/users/helm
+helm install -f ~/k8s/cinemas/helm-values/*.yaml movie-cinemas-dev ~/k8s/cinemas/helm
+helm install -f ~/k8s/frontend/helm-values/*.yaml movie-frontend-dev ~/k8s/frontend/helm
+helm install -f ~/k8s/media/helm-values/*.yaml media ~/k8s/media/helm
+helm install -f ~/k8s/movies/helm-values/*.yaml movie-movies-dev ~/k8s/movies/helm
+helm install -f ~/k8s/reservations/helm-values/*.yaml movie-reservations-dev ~/k8s/reservations/helm
+helm install -f ~/k8s/showtimes/helm-values/*.yaml movie-showtimes-dev ~/k8s/showtimes/helm
+
+helm upgrade -f ~/k8s/users/helm-values/*.yaml movie-users-dev ~/k8s/users/helm
+helm upgrade -f ~/k8s/cinemas/helm-values/*.yaml movie-cinemas-dev ~/k8s/cinemas/helm
+helm upgrade -f ~/k8s/frontend/helm-values/*.yaml movie-frontend-dev ~/k8s/frontend/helm
+helm upgrade -f ~/k8s/media/helm-values/*.yaml media ~/k8s/media/helm
+helm upgrade -f ~/k8s/movies/helm-values/*.yaml movie-movies-dev ~/k8s/movies/helm
+helm upgrade -f ~/k8s/reservations/helm-values/*.yaml movie-reservations-dev ~/k8s/reservations/helm
+helm upgrade -f ~/k8s/showtimes/helm-values/*.yaml movie-showtimes-dev ~/k8s/showtimes/helm

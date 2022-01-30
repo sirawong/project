@@ -1,6 +1,7 @@
-.firebase*
+.firebaserc
 build
-firebase*
+firebase.json
 Dockerfile
 .dockerignore
 node_modules/
+.git*

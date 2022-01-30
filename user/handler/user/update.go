@@ -2,6 +2,8 @@ package user
 
 import (
 	"context"
+	"errors"
+	"log"
 	"net/http"
 	"user/handler/view"
 	"user/service/user/input"
@@ -23,6 +25,13 @@ import (
 // @Router /users/:id [patch]
 func (ctrl *Controller) Update(c *gin.Context) {
 	ctx := context.Background()
+
+	userId := c.GetString("userid")
+	log.Println(userId)
+	if userId == c.Param("id") {
+		view.HandleError(c.Writer, errors.New("admin not allow to update yourself"))
+		return
+	}
 
 	input := &input.UserInput{
 		ID: c.Param("id"),

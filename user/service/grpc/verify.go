@@ -2,6 +2,8 @@ package grpc
 
 import (
 	"context"
+
+	"user/logs"
 	"user/service/grpc/protobuf/auth"
 )
 
@@ -13,6 +15,7 @@ func (impl *AuthenticationServer) VerifyToken(ctx context.Context, data *auth.To
 
 	id, user, err := impl.authSrv.Verify(ctx, data.Token)
 	if err != nil {
+		logs.Error(err)
 		return nil, err
 	}
 
