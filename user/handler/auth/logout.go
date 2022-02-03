@@ -28,12 +28,12 @@ func (ctrl *Controller) Logout(c *gin.Context) {
 
 	token, isTokenExist := c.Get("token")
 	if !isTokenExist {
-		view.HandleError(c.Writer, errors.New("connot get Token"))
+		view.HandleError(c, errors.New("connot get Token"))
 	}
 
 	userid, isUseridExist := c.Get("userid")
 	if !isUseridExist {
-		view.HandleError(c.Writer, errors.New("connot get UserId"))
+		view.HandleError(c, errors.New("connot get UserId"))
 	}
 
 	input := &input.AuthInput{
@@ -43,7 +43,7 @@ func (ctrl *Controller) Logout(c *gin.Context) {
 
 	err := ctrl.authService.Logout(ctx, input)
 	if err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 

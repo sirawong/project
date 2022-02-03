@@ -43,19 +43,17 @@ func (app *Handlers) RegisterRoutes(router *gin.Engine) *Handlers {
 	{
 		api.GET("", app.movieCtrl.All)
 		api.GET(":id", app.movieCtrl.Read)
-		
+		api.POST("photo/:id", app.movieCtrl.Upload)
+
 		enhance := api.Group("", app.middleware.Enhance())
 		{
 			enhance.POST("", app.movieCtrl.Create)
-			enhance.GET("photo/:id", app.movieCtrl.Upload)
 			enhance.PUT(":id", app.movieCtrl.Update)
 			enhance.DELETE(":id", app.movieCtrl.Delete)
 		}
 
 	}
-
 	return app
-
 }
 
 func (app *Handlers) corsMiddleware() gin.HandlerFunc {

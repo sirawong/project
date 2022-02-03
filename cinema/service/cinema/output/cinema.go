@@ -5,13 +5,13 @@ import (
 )
 
 type Cinema struct {
-	ID             string    `json:"id"`
-	Name           string    `json:"name"`
-	TicketPrice    int32     `json:"ticketPrice"`
-	City           string    `json:"city"`
-	Seats          [][]int32 `json:"seats"`
-	SeatsAvailable int32     `json:"seatsAvailable"`
-	Image          string    `json:"image"`
+	ID             string  `json:"_id"`
+	Name           string  `json:"name"`
+	TicketPrice    float32 `json:"ticketPrice"`
+	City           string  `json:"city"`
+	Seats          [][]int `json:"seats"`
+	SeatsAvailable int     `json:"seatsAvailable"`
+	Image          string  `json:"image"`
 }
 
 func ParseToOutput(ent *entities.Cinema) (out *Cinema) {

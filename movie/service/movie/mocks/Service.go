@@ -3,16 +3,12 @@
 package mocks
 
 import (
-	bytes "bytes"
 	context "context"
-
 	entities "movie/entities"
 
 	input "movie/service/movie/input"
 
 	mock "github.com/stretchr/testify/mock"
-
-	movie "movie/service/movie"
 
 	multipart "mime/multipart"
 
@@ -130,13 +126,13 @@ func (_m *Service) Update(ctx context.Context, in *input.MovieInput) (*output.Mo
 	return r0, r1
 }
 
-// Upload provides a mock function with given fields: ctx, client, body, writer, in
-func (_m *Service) Upload(ctx context.Context, client movie.HttpClienter, body *bytes.Buffer, writer *multipart.Writer, in *input.MovieInput) (*output.Movie, error) {
-	ret := _m.Called(ctx, client, body, writer, in)
+// Upload provides a mock function with given fields: ctx, in, filename, file
+func (_m *Service) Upload(ctx context.Context, in *input.MovieInput, filename string, file multipart.File) (*output.Movie, error) {
+	ret := _m.Called(ctx, in, filename, file)
 
 	var r0 *output.Movie
-	if rf, ok := ret.Get(0).(func(context.Context, movie.HttpClienter, *bytes.Buffer, *multipart.Writer, *input.MovieInput) *output.Movie); ok {
-		r0 = rf(ctx, client, body, writer, in)
+	if rf, ok := ret.Get(0).(func(context.Context, *input.MovieInput, string, multipart.File) *output.Movie); ok {
+		r0 = rf(ctx, in, filename, file)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*output.Movie)
@@ -144,8 +140,8 @@ func (_m *Service) Upload(ctx context.Context, client movie.HttpClienter, body *
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, movie.HttpClienter, *bytes.Buffer, *multipart.Writer, *input.MovieInput) error); ok {
-		r1 = rf(ctx, client, body, writer, in)
+	if rf, ok := ret.Get(1).(func(context.Context, *input.MovieInput, string, multipart.File) error); ok {
+		r1 = rf(ctx, in, filename, file)
 	} else {
 		r1 = ret.Error(1)
 	}

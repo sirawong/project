@@ -41,7 +41,7 @@ class Account extends Component {
             <AccountDetails
               file={image}
               user={user}
-              uploadImage={uploadImage}
+              uploadImage={uploadImage(user._id, image)}
             />
           </Grid>
         </Grid>

@@ -1,10 +1,8 @@
 package user
 
 import (
-	"bytes"
 	"context"
 	"mime/multipart"
-	"net/http"
 	"user/service/user/input"
 	"user/service/user/output"
 )
@@ -16,10 +14,5 @@ type Service interface {
 	Read(ctx context.Context, in *input.UserInput) (out *output.User, err error)
 	Update(ctx context.Context, in *input.UserInput) (out *output.User, err error)
 	Delete(ctx context.Context, in *input.UserInput) (err error)
-	Upload(ctx context.Context, client HttpClienter, body *bytes.Buffer, writer *multipart.Writer, in *input.UserInput) (out *output.User, err error)
-}
-
-//go:generate mockery --name=HttpClienter
-type HttpClienter interface {
-	Do(req *http.Request) (*http.Response, error)
+	Upload(ctx context.Context, in *input.UserInput, filename string, file multipart.File) (out *output.User, err error)
 }

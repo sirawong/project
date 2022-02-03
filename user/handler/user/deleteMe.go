@@ -27,18 +27,18 @@ func (ctrl *Controller) DeleteMe(c *gin.Context) {
 
 	role := c.GetString("role")
 	if role == "" {
-		view.HandleError(c.Writer, errors.New("connot get role"))
+		view.HandleError(c, errors.New("connot get role"))
 		return
 	}
 
-	if role != "superadmin" {
-		view.HandleError(c.Writer, errors.New("you cannot delete yourself"))
+	if role == "superadmin" {
+		view.HandleError(c, errors.New("you cannot delete yourself"))
 		return
 	}
 
 	userid := c.GetString("userid")
 	if userid == "" {
-		view.HandleError(c.Writer, errors.New("connot get role"))
+		view.HandleError(c, errors.New("connot get role"))
 		return
 	}
 
@@ -48,7 +48,7 @@ func (ctrl *Controller) DeleteMe(c *gin.Context) {
 
 	err := ctrl.userService.Delete(ctx, input)
 	if err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 

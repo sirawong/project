@@ -3,7 +3,6 @@ package implement
 import (
 	"context"
 	"fmt"
-	"log"
 	"user/entities"
 	"user/errs"
 	"user/logs"
@@ -24,7 +23,6 @@ func (impl *implementation) Login(ctx context.Context, in *input.AuthInput) (out
 		logs.Error(err)
 		return nil, nil, errs.NewBadRequestError("You have entered an invalid username or password")
 	}
-	log.Println(user)
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(in.Password))
 	if err != nil {

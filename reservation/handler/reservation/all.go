@@ -31,7 +31,7 @@ func (ctrl *Handlers) All(c *gin.Context) {
 
 	items, err := ctrl.service.List(ctx, opt)
 	if err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 

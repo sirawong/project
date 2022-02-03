@@ -150,8 +150,6 @@ function LoginForm(props) {
       </Button>
       <Button 
         className={classes.inputUser}
-        usernameValue="user"
-        passwordValue="user"
         onClick={() => handleLoginChange({username:'user', password:'userpass'})}>
           user : userpass
       </Button>

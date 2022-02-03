@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"user/handler/view"
 	"user/service/user/input"
@@ -24,13 +25,18 @@ import (
 func (ctrl *Controller) Delete(c *gin.Context) {
 	ctx := context.Background()
 
+	if c.Param("id") == c.GetString("userid") {
+		view.HandleError(c, errors.New("you cannot delete yourself"))
+		return
+	}
+
 	input := &input.UserInput{
 		ID: c.Param("id"),
 	}
 
 	err := ctrl.userService.Delete(ctx, input)
 	if err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 

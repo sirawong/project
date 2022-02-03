@@ -30,7 +30,7 @@ func (ctrl *Controller) Read(c *gin.Context) {
 
 	item, err := ctrl.userService.Read(ctx, input)
 	if err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 

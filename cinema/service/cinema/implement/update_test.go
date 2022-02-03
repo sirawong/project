@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 
 	"cinema/config"
 	"cinema/service/cinema/implement"
@@ -32,10 +33,12 @@ func TestUpdateCinema(t *testing.T) {
 
 	t.Run("Success", func(t *testing.T) {
 		cinemaRepo := &mocksRepo.CinemaRepository{}
+		storage := &mocksRepo.Storage{}
 
+		cinemaRepo.On("Read", ctx, filters, mock.Anything).Return(nil)
 		cinemaRepo.On("Update", ctx, filters, mockInput.ParseToEntities()).Return(nil)
 
-		service := implement.New(cinemaRepo, uuid, config)
+		service := implement.New(cinemaRepo, uuid, config, storage)
 		cinema, err := service.Update(ctx, mockInput)
 		assert.Nil(t, err)
 		assert.Equal(t, mockInput.ID, cinema.ID)
@@ -43,10 +46,12 @@ func TestUpdateCinema(t *testing.T) {
 
 	t.Run("Error", func(t *testing.T) {
 		cinemaRepo := &mocksRepo.CinemaRepository{}
+		storage := &mocksRepo.Storage{}
 
+		cinemaRepo.On("Read", ctx, filters, mock.Anything).Return(nil)
 		cinemaRepo.On("Update", ctx, filters, mockInput.ParseToEntities()).Return(errors.New("error"))
 
-		service := implement.New(cinemaRepo, uuid, config)
+		service := implement.New(cinemaRepo, uuid, config, storage)
 		_, err := service.Update(ctx, mockInput)
 		assert.NotNil(t, err)
 	})

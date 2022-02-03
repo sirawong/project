@@ -93,12 +93,12 @@ export default function BookingSeats(props) {
               style={{ background: 'rgb(120, 205, 4)' }}></div>
             Selected Seat
           </div>
-          <div className={classes.seatInfo}>
+          {/* <div className={classes.seatInfo}>
             <div
               className={classes.seatInfoLabel}
               style={{ background: 'rgb(14, 151, 218)' }}></div>
             Recommended Seat
-          </div>
+          </div> */}
         </div>
       </Box>
     </Fragment>

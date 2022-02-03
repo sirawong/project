@@ -1,50 +1,45 @@
 package implement
 
 import (
-	"bytes"
 	"context"
 	"fmt"
-	"io"
 	"mime/multipart"
-	"net/http"
-	"strings"
-	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 
+	"cinema/entities"
 	"cinema/errs"
 	"cinema/logs"
-	"cinema/service/cinema"
 	"cinema/service/cinema/input"
 	"cinema/service/cinema/output"
 )
 
-func (impl *implementation) Upload(ctx context.Context, client cinema.HttpClienter, body *bytes.Buffer, writer *multipart.Writer, in *input.CinemaInput) (out *output.Cinema, err error) {
-	url := impl.config.PhotoUrl
-	request, _ := http.NewRequest(http.MethodPost, url, body)
-	request.Header.Add("Content-Type", writer.FormDataContentType())
-	resp, err := client.Do(request)
+func (impl *implementation) Upload(ctx context.Context, in *input.CinemaInput, filename string, file multipart.File) (out *output.Cinema, err error){
+	urlPath, err := impl.storageRepo.Upload(ctx, filename, file)
 	if err != nil {
 		logs.Error(err)
-		return nil, errs.NewUnexpectedError()
+		return nil, err
 	}
-	defer resp.Body.Close()
 
-	if resp.StatusCode == http.StatusOK {
-		bodyBytes, _ := io.ReadAll(resp.Body)
-		bodyString := strings.Trim(string(bodyBytes), "\"")
-		filters := []string{
-			fmt.Sprintf("_id:eq:%v", in.ID),
-		}
-
-		update := bson.M{"image": bodyString, "updatedAt": time.Now()}
-
-		err = impl.cinemaRepo.Update(ctx, filters, update)
-		if err != nil {
-			logs.Error(err)
-			return nil, errs.NewUnexpectedError()
-		}
+	filters := []string{
+		fmt.Sprintf("_id:eq:%v", in.ID),
 	}
+
+	ent := bson.M{"image": urlPath}
+	err = impl.cinemaRepo.Update(ctx, filters, ent)
+	if err != nil {
+		logs.Error(err)
+		return nil, errs.NewBadRequestError(err.Error())
+	}
+
+	cinema := &entities.Cinema{}
+	err = impl.cinemaRepo.Read(ctx, filters, cinema)
+	if err != nil {
+		logs.Error(err)
+		return nil, errs.NewBadRequestError("User not found")
+	}
+
+	out = output.ParseToOutput(cinema)
 
 	return out, nil
 }

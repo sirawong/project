@@ -27,13 +27,13 @@ func (ctrl *Controller) LogoutAll(c *gin.Context) {
 
 	input := &input.AuthInput{}
 	if err := c.ShouldBindJSON(input); err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 
 	err := ctrl.authService.LogoutAll(ctx, input)
 	if err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 

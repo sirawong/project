@@ -29,9 +29,10 @@ func TestDeleteMe(t *testing.T) {
 		ctx.Request, err = request.MakeDeleteMeReq()
 		assert.Nil(t, err)
 
-		mockInput.Role = "superadmin"
+		mockInput.Role = "guest"
 		ctx.Set("userid", mockInput.ID)
 		ctx.Set("role", mockInput.Role)
+
 		userSrv.On("Delete", mock.Anything, mock.Anything).Return(nil)
 
 		ctrl.DeleteMe(ctx)

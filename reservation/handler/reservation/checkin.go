@@ -26,17 +26,17 @@ func (ctrl *Handlers) Checkin(c *gin.Context) {
 	ctx := context.Background()
 
 	input := &input.ReservationInput{
-		ID:      c.Param("id"),
-		Checkin: true,
+		ID: c.Param("id"),
 	}
+
 	if err := c.ShouldBindJSON(input); err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 
-	item, err := ctrl.service.Update(ctx, input)
+	item, err := ctrl.service.Checkin(ctx, input)
 	if err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 

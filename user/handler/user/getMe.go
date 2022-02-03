@@ -3,7 +3,6 @@ package user
 import (
 	"context"
 	"errors"
-	"log"
 	"net/http"
 	"user/handler/view"
 	"user/service/user/input"
@@ -27,9 +26,8 @@ func (ctrl *Controller) GetMe(c *gin.Context) {
 	ctx := context.Background()
 
 	userId := c.GetString("userid")
-	log.Println(userId)
 	if userId == "" {
-		view.HandleError(c.Writer, errors.New("connot get UserId"))
+		view.HandleError(c, errors.New("connot get UserId"))
 		return
 	}
 
@@ -39,7 +37,7 @@ func (ctrl *Controller) GetMe(c *gin.Context) {
 
 	item, err := ctrl.userService.Read(ctx, input)
 	if err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 

@@ -8,28 +8,21 @@ import (
 
 	"reservation/middleware"
 
-	inviteController "reservation/handler/invitation"
-	inviatateService "reservation/service/invitation"
-
 	reservController "reservation/handler/reservation"
 	reservationService "reservation/service/reservation"
 )
 
 type Handlers struct {
 	reservService reservationService.Service
-	inviteService inviatateService.Service
 	middleware    middleware.Service
 	reservCtrl    *reservController.Handlers
-	inviteCtrl    *inviteController.Handlers
 }
 
-func New(reservationService reservationService.Service, inviteService inviatateService.Service, middleware middleware.Service) *Handlers {
+func New(reservationService reservationService.Service, middleware middleware.Service) *Handlers {
 	return &Handlers{
 		reservService: reservationService,
-		inviteService: inviteService,
 		middleware:    middleware,
 		reservCtrl:    reservController.New(reservationService),
-		inviteCtrl:    inviteController.New(inviteService),
 	}
 }
 
@@ -52,19 +45,17 @@ func (app *Handlers) RegisterRoutes(router *gin.Engine) *Handlers {
 		api.GET(":id", app.reservCtrl.Read)
 		api.GET("checkin/:id", app.reservCtrl.Checkin)
 
-		simple := api.Group("", app.middleware.Simple())
+		// simple := api.Group("", app.middleware.Simple())
 		{
-			simple.POST("", app.reservCtrl.Create)
-			simple.GET("", app.reservCtrl.All)
+			api.POST("", app.reservCtrl.Create)
+			api.GET("", app.reservCtrl.All)
 		}
-		enhance := api.Group("", app.middleware.Enhance())
+		// enhance := api.Group("", app.middleware.Enhance())
 		{
-			enhance.PATCH(":id", app.reservCtrl.Update)
-			enhance.DELETE(":id", app.reservCtrl.Delete)
+			api.PATCH(":id", app.reservCtrl.Update)
+			api.DELETE(":id", app.reservCtrl.Delete)
 		}
 	}
-
-	router.POST("/invitations", app.middleware.Simple(), app.inviteCtrl.Invitation)
 
 	return app
 

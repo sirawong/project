@@ -26,13 +26,13 @@ func (ctrl *Controller) Create(c *gin.Context) {
 
 	input := &input.UserInput{}
 	if err := c.ShouldBindJSON(input); err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 
 	user, token, err := ctrl.userService.Create(ctx, input)
 	if err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 

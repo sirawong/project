@@ -7,6 +7,7 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 
+	"user/entities"
 	"user/errs"
 	"user/logs"
 	"user/service/user/input"
@@ -14,9 +15,15 @@ import (
 )
 
 func (impl *implementation) Update(ctx context.Context, in *input.UserInput) (out *output.User, err error) {
-
 	filters := []string{
 		fmt.Sprintf("_id:eq:%v", in.ID),
+	}
+
+	user := &entities.User{}
+	err = impl.repo.Read(ctx, filters, user)
+	if err != nil {
+		logs.Error(err)
+		return nil, errs.NewBadRequestError("User not found")
 	}
 
 	ent := in.ParseToEntities()
@@ -29,9 +36,16 @@ func (impl *implementation) Update(ctx context.Context, in *input.UserInput) (ou
 		}
 		ent.Password = string(hashing)
 	} else {
-		return nil, errs.NewBadRequestError("Password cannot be empty")
+		ent.Password = user.Password
 	}
 
+	if user.Role == "" {
+		ent.Role = user.Role
+	}
+
+	ent.Imageurl = user.Imageurl
+	ent.Username = user.Username
+	ent.CreatedAt = user.CreatedAt
 	ent.UpdatedAt = time.Now()
 
 	err = impl.repo.Update(ctx, filters, ent)
@@ -40,5 +54,5 @@ func (impl *implementation) Update(ctx context.Context, in *input.UserInput) (ou
 		return nil, errs.NewBadRequestError(err.Error())
 	}
 
-	return output.ParseToOutput(ent), nil
+	return output.ParseToOutput(user), nil
 }

@@ -27,7 +27,7 @@ func (ctrl *Controller) All(c *gin.Context) {
 
 	items, err := ctrl.userService.All(ctx)
 	if err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 

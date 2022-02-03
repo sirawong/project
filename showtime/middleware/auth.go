@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -51,7 +50,7 @@ func (middleware Service) Enhance() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, map[string]string{"error": "Please authenticate."})
 			return
 		}
-		log.Println(token)
+
 		data := &pbAuth.TokenRequest{
 			Id:    fmt.Sprint(time.Now().Unix()),
 			Token: token,

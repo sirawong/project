@@ -14,9 +14,9 @@ import (
 
 // GetMockCinemaEntity for unit test
 func GetMockCinemaEntity() entities.Cinema {
-	seats := [][]int32{}
+	seats := [][]int{}
 	for i := 0; i < 2; i++ {
-		seats[i] = []int32{0}
+		seats[i] = []int{0}
 	}
 
 	mockCinemaEntity := entities.Cinema{

@@ -14,7 +14,7 @@ type MovieInput struct {
 	Director    string    `json:"director"`
 	Cast        string    `json:"cast"`
 	Description string    `json:"description"`
-	Duration    float32   `json:"duration"`
+	Duration    string    `json:"duration"`
 	ReleaseDate time.Time `json:"releaseDate"`
 	EndDate     time.Time `json:"endDate"`
 }

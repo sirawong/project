@@ -5,7 +5,7 @@ export const uploadCinemaImage = (id, image) => async dispatch => {
   try {
     const data = new FormData();
     data.append('file', image);
-    const url = process.env.REACT_APP_BASE_URL + '/cinemas/cinemas/photo/' + id;
+    const url = process.env.REACT_APP_BASE_CINEMA_URL + '/photo/' + id;
     const response = await fetch(url, {
       method: 'POST',
       body: data
@@ -24,7 +24,7 @@ export const uploadCinemaImage = (id, image) => async dispatch => {
 
 export const getCinemas = () => async dispatch => {
   try {
-    const url = process.env.REACT_APP_BASE_URL + '/cinemas/cinemas';
+    const url = process.env.REACT_APP_BASE_CINEMA_URL;
     const response = await fetch(url, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
@@ -40,7 +40,7 @@ export const getCinemas = () => async dispatch => {
 
 export const getCinema = id => async dispatch => {
   try {
-    const url = process.env.REACT_APP_BASE_URL + '/cinemas/cinemas/' + id;
+    const url = process.env.REACT_APP_BASE_CINEMA_URL + '/' + id;
     const response = await fetch(url, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
@@ -57,14 +57,20 @@ export const getCinema = id => async dispatch => {
 export const createCinemas = (image, newCinema) => async dispatch => {
   try {
     const token = localStorage.getItem('jwtToken');
-    const url = process.env.REACT_APP_BASE_URL + '/cinemas/cinemas';
+    const url = process.env.REACT_APP_BASE_CINEMA_URL;
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(newCinema)
+      body: JSON.stringify({
+        "name": newCinema.name,
+        "ticketPrice": Number(newCinema.ticketPrice),
+        "city": newCinema.city,
+        "seats": newCinema.seats,
+        "seatsAvailable": Number(newCinema.seatsAvailable),
+      })
     });
     const cinema = await response.json();
     if (response.ok) {
@@ -85,14 +91,20 @@ export const createCinemas = (image, newCinema) => async dispatch => {
 export const updateCinemas = (image, cinema, id) => async dispatch => {
   try {
     const token = localStorage.getItem('jwtToken');
-    const url = process.env.REACT_APP_BASE_URL + '/cinemas/cinemas/' + id;
+    const url = process.env.REACT_APP_BASE_CINEMA_URL + '/'  + id;
     const response = await fetch(url, {
       method: 'PATCH',
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(cinema)
+      body: JSON.stringify({
+        "name": cinema.name,
+        "ticketPrice": Number(cinema.ticketPrice),
+        "city": cinema.city,
+        "seats": cinema.seats,
+        "seatsAvailable": Number(cinema.seatsAvailable),
+      })
     });
     if (response.ok) {
       dispatch(setAlert('Cinema Updated', 'success', 2000));
@@ -111,7 +123,7 @@ export const updateCinemas = (image, cinema, id) => async dispatch => {
 export const removeCinemas = id => async dispatch => {
   try {
     const token = localStorage.getItem('jwtToken');
-    const url = process.env.REACT_APP_BASE_URL + '/cinemas/cinemas/' + id;
+    const url = process.env.REACT_APP_BASE_CINEMA_URL + '/'  + id;
     const response = await fetch(url, {
       method: 'DELETE',
       headers: {
@@ -134,7 +146,7 @@ export const removeCinemas = id => async dispatch => {
 
 // export const getCinemasUserModeling = username => async dispatch => {
 //   try {
-//     const url = process.env.REACT_APP_BASE_URL + '/cinemas/cinemas/usermodeling/' + username;
+//     const url = process.env.REACT_APP_BASE_CINEMA_URL + '/usermodeling/' + username;
 //     const response = await fetch(url, {
 //       method: 'GET',
 //       headers: { 'Content-Type': 'application/json' }

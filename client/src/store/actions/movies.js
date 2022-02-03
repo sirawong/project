@@ -1,11 +1,12 @@
-import { GET_MOVIES, SELECT_MOVIE,GET_SUGGESTIONS } from '../types';
+import { GET_MOVIES, SELECT_MOVIE } from '../types';
 import { setAlert } from './alert';
 
 export const uploadMovieImage = (id, image) => async dispatch => {
   try {
     const data = new FormData();
+    console.log("test")
     data.append('file', image);
-    const url = process.env.REACT_APP_BASE_URL + '/movies/movies/photo/' + id;
+    const url = process.env.REACT_APP_BASE_MOVIE_URL + '/photo/' + id;
     const response = await fetch(url, {
       method: 'POST',
       body: data
@@ -24,7 +25,7 @@ export const uploadMovieImage = (id, image) => async dispatch => {
 
 export const getMovies = () => async dispatch => {
   try {
-    const url = process.env.REACT_APP_BASE_URL + '/movies/movies';
+    const url = process.env.REACT_APP_BASE_MOVIE_URL ;
     const response = await fetch(url, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
@@ -45,7 +46,7 @@ export const onSelectMovie = movie => ({
 
 export const getMovie = id => async dispatch => {
   try {
-    const url = process.env.REACT_APP_BASE_URL + '/movies/movies/' + id;
+    const url = process.env.REACT_APP_BASE_MOVIE_URL + '/' + id;
     const response = await fetch(url, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
@@ -61,7 +62,7 @@ export const getMovie = id => async dispatch => {
 
 // export const getMovieSuggestion = id => async dispatch => {
 //   try {
-//     const url = process.env.REACT_APP_BASE_URL + '/movies/movies/usermodeling/' + id;
+//     const url = process.env.REACT_APP_BASE_MOVIE_URL + '/usermodeling/' + id;
 //     const response = await fetch(url, {
 //       method: 'GET',
 //       headers: { 'Content-Type': 'application/json' }
@@ -78,14 +79,24 @@ export const getMovie = id => async dispatch => {
 export const addMovie = (image, newMovie) => async dispatch => {
   try {
     const token = localStorage.getItem('jwtToken');
-    const url = process.env.REACT_APP_BASE_URL + '/movies/movies';
+    const url = process.env.REACT_APP_BASE_MOVIE_URL;
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(newMovie)
+      body: JSON.stringify({
+        "title":newMovie.title,
+        "language":newMovie.language,
+        "genre":newMovie.genre,
+        "director":newMovie.director,
+        "cast":newMovie.cast,
+        "description":newMovie.description,
+        "duration":String(newMovie.duration),
+        "releaseDate":new Date(newMovie.releaseDate).toISOString(),
+        "endDate":new Date(newMovie.endDate).toISOString(),
+      })
     });
     const movie = await response.json();
     if (response.ok) {
@@ -101,14 +112,24 @@ export const addMovie = (image, newMovie) => async dispatch => {
 export const updateMovie = (movieId, movie, image) => async dispatch => {
   try {
     const token = localStorage.getItem('jwtToken');
-    const url = process.env.REACT_APP_BASE_URL + '/movies/movies/' + movieId;
+    const url = process.env.REACT_APP_BASE_MOVIE_URL + '/' + movieId;
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(movie)
+      body: JSON.stringify({
+        "title":movie.title,
+        "language":movie.language,
+        "genre":movie.genre,
+        "director":movie.director,
+        "cast":movie.cast,
+        "description":movie.description,
+        "duration":String(movie.duration),
+        "releaseDate":new Date(movie.releaseDate).toISOString(),
+        "endDate":new Date(movie.endDate).toISOString(),
+      })
     });
     if (response.ok) {
       dispatch(onSelectMovie(null));
@@ -124,7 +145,7 @@ export const updateMovie = (movieId, movie, image) => async dispatch => {
 export const removeMovie = movieId => async dispatch => {
   try {
     const token = localStorage.getItem('jwtToken');
-    const url = process.env.REACT_APP_BASE_URL + '/movies/movies/' + movieId;
+    const url = process.env.REACT_APP_BASE_MOVIE_URL + '/' + movieId;
     const response = await fetch(url, {
       method: 'DELETE',
       headers: {

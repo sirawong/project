@@ -29,13 +29,13 @@ func (ctrl *Handlers) Update(c *gin.Context) {
 		ID: c.Param("id"),
 	}
 	if err := c.ShouldBindJSON(input); err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 
 	item, err := ctrl.service.Update(ctx, input)
 	if err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 

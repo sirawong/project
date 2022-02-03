@@ -2,30 +2,27 @@ version: '3.8'
 
 services:
 
-  # mongo:
-  #   image: mongo
-  #   restart: always
-  #   ports:
-  #     - 27017:27017
-  #   container_name: mongo
-  #   volumes:
-  #     - ./mongo_data:/data/db
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    container_name: mongo
 
   user: 
     build: 
       context: ./user
       dockerfile: Dockerfile
-    image: asia.gcr.io/movie-app-339412/movie-user:dev
     ports:
       - 8081:8080
     environment:
       APP_PORT: :8080
       MONGODB_ENDPOINT: mongodb://mongo:27017
-      MONGODB_NAME: movie-booking
-      MONGODB_COLLECTION: user
+      MONGODB_NAME: movie-dev
+      MONGODB_COLLECTION: users
       JWT_SECRET: 'ffsdlfk#sd/'
       GRPC_HOST: :5000
-      PHOTO_URL: http://media:9000/media/upload
+      PHOTO_URL: http://media:8080/media/upload
     depends_on:
       - mongo
   
@@ -33,17 +30,16 @@ services:
     build: 
       context: ./cinema
       dockerfile: Dockerfile
-    image: asia.gcr.io/movie-app-339412/movie-cinema:dev
     ports:
       - 8082:8080
     environment:
       APP_PORT: :8080
       MONGODB_ENDPOINT: mongodb://mongo:27017
-      MONGODB_NAME: movie-booking
-      MONGODB_COLLECTION: cinema
+      MONGODB_NAME: movie-dev
+      MONGODB_COLLECTION: cinemas
       GRPC_HOST: :5001
       GRPC_AUTH_HOST: user:5000
-      PHOTO_URL: http://media:9000/media/upload
+      PHOTO_URL: http://media:8080/media/upload
     depends_on:
       - mongo
       - user
@@ -52,16 +48,15 @@ services:
     build: 
       context: ./movie/
       dockerfile: Dockerfile
-    image: asia.gcr.io/movie-app-339412/movie-movie:dev
     ports:
       - 8083:8080
     environment:
       APP_PORT: :8080
       MONGODB_ENDPOINT: mongodb://mongo:27017
-      MONGODB_NAME: movie-booking
-      MONGODB_COLLECTION: movie
+      MONGODB_NAME: movie-dev
+      MONGODB_COLLECTION: movies
       GRPC_AUTH_HOST: user:5000
-      PHOTO_URL: http://media:9000/media/upload
+      PHOTO_URL: http://media:8080/media/upload
     depends_on:
       - mongo
       - user
@@ -70,15 +65,14 @@ services:
     build: 
       context: ./reservation/
       dockerfile: Dockerfile
-    image: asia.gcr.io/movie-app-339412/movie-reservation:dev
     ports:
       - 8084:8080
     environment:
       APP_PORT: :8080
       APP_URL: :8004/checkin
       MONGODB_ENDPOINT: mongodb://mongo:27017
-      MONGODB_NAME: movie-booking
-      MONGODB_COLLECTION: reservation
+      MONGODB_NAME: movie-dev
+      MONGODB_COLLECTION: reservations
       GRPC_HOST: :5002
       GRPC_AUTH_HOST: user:5000
       GRPC_CINEMA_HOST: cinema:5001
@@ -91,14 +85,13 @@ services:
     build:
       context: ./showtime/
       dockerfile: Dockerfile
-    image: asia.gcr.io/movie-app-339412/movie-showtime:dev
     ports:
       - 8085:8080
     environment:
       APP_PORT: :8080
       MONGODB_ENDPOINT: mongodb://mongo:27017
-      MONGODB_NAME: movie-booking
-      MONGODB_COLLECTION: showtime
+      MONGODB_NAME: movie-dev
+      MONGODB_COLLECTION: showtimes
       GRPC_AUTH_HOST: user:5000
     depends_on:
       - mongo
@@ -108,19 +101,18 @@ services:
     build: 
       context: ./media
       dockerfile: Dockerfile
-    image: asia.gcr.io/movie-app-339412/movie-media:dev
     ports:
-      - 9000:9000
+      - 8080:8080
 
   client:
     build:
       context: ./client
       dockerfile: Dockerfile
       args: 
-        REACT_APP_BASE_URL: http://movie.api.whoisusefor.tk
-    image: asia.gcr.io/movie-app-339412/movie-booking:dev
+        REACT_APP_BASE_USER_URL: http://localhost:8081/users
+        REACT_APP_BASE_CINEMA_URL:  http://localhost:8082/cinemas
+        REACT_APP_BASE_MOVIE_URL:  http://localhost:8083/movies
+        REACT_APP_BASE_RESERVATION_URL:  http://localhost:8084/reservations
+        REACT_APP_BASE_SHOWTIME_URL:  http://localhost:8085/showtimes
     ports:
-      - 8080:80
-    # environment:
-      # REACT_APP_BASE_URL: http://movie.dev.whoisusefor.tk/api
-      # REACT_APP_BASE_URL: http://user
+      - 80:80

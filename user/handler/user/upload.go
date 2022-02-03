@@ -1,10 +1,7 @@
 package user
 
 import (
-	"bytes"
 	"context"
-	"io"
-	"mime/multipart"
 	"net/http"
 	"user/handler/view"
 	"user/service/user/input"
@@ -27,28 +24,21 @@ import (
 func (ctrl *Controller) Upload(c *gin.Context) {
 	ctx := context.Background()
 
-	fileMultipart, err := c.FormFile("file")
+	file, fileHeader, err := c.Request.FormFile("file")
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, "Please upload a file")
 		return
 	}
 
+	defer file.Close()
+
 	input := &input.UserInput{
 		ID: c.Param("id"),
 	}
 
-	body := &bytes.Buffer{}
-	writer := multipart.NewWriter(body)
-	part, _ := writer.CreateFormFile("file", fileMultipart.Filename)
-	file, _ := fileMultipart.Open()
-	io.Copy(part, file)
-	writer.Close()
-
-	client := &http.Client{}
-
-	item, err := ctrl.userService.Upload(ctx, client, body, writer, input)
+	item, err := ctrl.userService.Upload(ctx, input, fileHeader.Filename, file)
 	if err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 

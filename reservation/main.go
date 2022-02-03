@@ -13,9 +13,7 @@ import (
 	"reservation/middleware"
 	"reservation/repository/grpc"
 	repositoryDB "reservation/repository/mongodb"
-	repositorySendGrid "reservation/repository/sendgrid"
 	grpcClient "reservation/service/grpcClient/implement"
-	invitationService "reservation/service/invitation/implement"
 	reservationService "reservation/service/reservation/implement"
 	"reservation/utils"
 )
@@ -42,12 +40,9 @@ func main() {
 	reservationDB := repositoryDB.New(dbConn, appConfig)
 	reservationSRV := reservationService.New(reservationDB, uuid, grpcService, appConfig)
 
-	sendGridDB := repositorySendGrid.New(appConfig.SendgridAPIKey)
-	invitationSRV := invitationService.New(sendGridDB)
-
 	router := gin.New()
 	router.Use(gin.Logger(), gin.Recovery())
-	_ = handler.New(reservationSRV, invitationSRV, middlewareService).RegisterRoutes(router)
+	_ = handler.New(reservationSRV, middlewareService).RegisterRoutes(router)
 	router.Run(appConfig.AppPort)
 }
 

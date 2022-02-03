@@ -19,7 +19,7 @@ export const selectAllShowtimes = () => ({ type: SELECT_ALL_SHOWTIMES });
 export const getShowtimes = () => async dispatch => {
   try {
     const token = localStorage.getItem('jwtToken');
-    const url = process.env.REACT_APP_BASE_URL + '/showtimes/showtimes';
+    const url = process.env.REACT_APP_BASE_SHOWTIME_URL;
     const response = await fetch(url, {
       method: 'GET',
       headers: {
@@ -38,7 +38,7 @@ export const getShowtimes = () => async dispatch => {
 export const addShowtime = showtime => async dispatch => {
   try {
     const token = localStorage.getItem('jwtToken');
-    const url = process.env.REACT_APP_BASE_URL + '/showtimes/showtimes/';
+    const url = process.env.REACT_APP_BASE_SHOWTIME_URL;
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -63,7 +63,7 @@ export const addShowtime = showtime => async dispatch => {
 export const updateShowtime = (showtime, id) => async dispatch => {
   try {
     const token = localStorage.getItem('jwtToken');
-    const url = process.env.REACT_APP_BASE_URL + '/showtimes/showtimes/' + id;
+    const url = process.env.REACT_APP_BASE_SHOWTIME_URL + '/' + id;
     const response = await fetch(url, {
       method: 'PATCH',
       headers: {
@@ -88,7 +88,7 @@ export const updateShowtime = (showtime, id) => async dispatch => {
 export const deleteShowtime = id => async dispatch => {
   try {
     const token = localStorage.getItem('jwtToken');
-    const url = process.env.REACT_APP_BASE_URL + '/showtimes/showtimes/' + id;
+    const url = process.env.REACT_APP_BASE_SHOWTIME_URL + '/' + id;
     const response = await fetch(url, {
       method: 'DELETE',
       headers: {

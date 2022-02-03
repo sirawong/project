@@ -3,7 +3,6 @@ package user
 import (
 	"context"
 	"errors"
-	"log"
 	"net/http"
 	"user/handler/view"
 	"user/service/user/input"
@@ -27,9 +26,8 @@ func (ctrl *Controller) Update(c *gin.Context) {
 	ctx := context.Background()
 
 	userId := c.GetString("userid")
-	log.Println(userId)
 	if userId == c.Param("id") {
-		view.HandleError(c.Writer, errors.New("admin not allow to update yourself"))
+		view.HandleError(c, errors.New("admin not allow to update yourself"))
 		return
 	}
 
@@ -37,13 +35,13 @@ func (ctrl *Controller) Update(c *gin.Context) {
 		ID: c.Param("id"),
 	}
 	if err := c.ShouldBindJSON(input); err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 
 	item, err := ctrl.userService.Update(ctx, input)
 	if err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 

@@ -27,13 +27,13 @@ func (ctrl *Controller) UpdateMe(c *gin.Context) {
 
 	userId := c.GetString("userid")
 	if userId == "" {
-		view.HandleError(c.Writer, errors.New("connot get UserId"))
+		view.HandleError(c, errors.New("connot get UserId"))
 		return
 	}
 
 	role := c.GetString("role")
 	if role == "superadmin" {
-		view.HandleError(c.Writer, errors.New("admin not allow to update yourself"))
+		view.HandleError(c, errors.New("admin not allow to update yourself"))
 		return
 	}
 
@@ -41,13 +41,13 @@ func (ctrl *Controller) UpdateMe(c *gin.Context) {
 		ID: userId,
 	}
 	if err := c.ShouldBindJSON(input); err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 
 	item, err := ctrl.userService.Update(ctx, input)
 	if err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 
