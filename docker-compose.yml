@@ -2,101 +2,43 @@ version: '3.8'
 
 services:
 
-  mongo:
-    image: mongo
-    restart: always
-    ports:
-      - 27017:27017
-    container_name: mongo
+  # mongo:
+  #   image: mongo
+  #   restart: always
+  #   ports:
+  #     - 27017:27017
+  #   container_name: mongo
 
   user: 
     build: 
       context: ./user
       dockerfile: Dockerfile
     image: asia.gcr.io/movie-app-339412/movie-user:dev
-    environment:
-      APP_PORT: :8080
-      MONGODB_ENDPOINT: mongodb://mongo:27017
-      MONGODB_NAME: movie-booking
-      MONGODB_COLLECTION: user
-      JWT_SECRET: 'ffsdlfk#sd/'
-      GRPC_HOST: :5000
-      PHOTO_URL: http://media:9000/media/upload
-    depends_on:
-      - mongo
   
   cinema: 
     build: 
       context: ./cinema
       dockerfile: Dockerfile
     image: asia.gcr.io/movie-app-339412/movie-cinema:dev
-    environment:
-      APP_PORT: :8080
-      MONGODB_ENDPOINT: mongodb://mongo:27017
-      MONGODB_NAME: movie-booking
-      MONGODB_COLLECTION: cinema
-      GRPC_HOST: :5001
-      GRPC_AUTH_HOST: user:5000
-      PHOTO_URL: http://media:9000/media/upload
-    depends_on:
-      - mongo
-      - user
   
   movie: 
     build: 
       context: ./movie/
       dockerfile: Dockerfile
     image: asia.gcr.io/movie-app-339412/movie-movie:dev
-    environment:
-      APP_PORT: :8080
-      MONGODB_ENDPOINT: mongodb://mongo:27017
-      MONGODB_NAME: movie-booking
-      MONGODB_COLLECTION: movie
-      GRPC_AUTH_HOST: user:5000
-      PHOTO_URL: http://media:9000/media/upload
-    depends_on:
-      - mongo
-      - user
   
   reservation: 
     build: 
       context: ./reservation/
       dockerfile: Dockerfile
     image: asia.gcr.io/movie-app-339412/movie-reservation:dev
-    environment:
-      APP_PORT: :8080
-      APP_URL: :8004/checkin
-      MONGODB_ENDPOINT: mongodb://mongo:27017
-      MONGODB_NAME: movie-booking
-      MONGODB_COLLECTION: reservation
-      GRPC_HOST: :5002
-      GRPC_AUTH_HOST: user:5000
-      GRPC_CINEMA_HOST: cinema:5001
-    depends_on:
-      - mongo
-      - user
-      - cinema
   
   showtime: 
     build:
       context: ./showtime/
       dockerfile: Dockerfile
     image: asia.gcr.io/movie-app-339412/movie-showtime:dev
-    environment:
-      APP_PORT: :8080
-      MONGODB_ENDPOINT: mongodb://mongo:27017
-      MONGODB_NAME: movie-booking
-      MONGODB_COLLECTION: showtime
-      GRPC_AUTH_HOST: user:5000
-    depends_on:
-      - mongo
-      - user
   
-  media:
-    build: 
-      context: ./media
-      dockerfile: Dockerfile
-    image: asia.gcr.io/movie-app-339412/movie-media:dev
 
   client:
     build:

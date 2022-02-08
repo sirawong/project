@@ -41,11 +41,11 @@ func (app *Handlers) RegisterRoutes(router *gin.Engine) *Handlers {
 		api.GET(":id", app.cinemaCtrl.Read)
 		api.POST("photo/:id", app.cinemaCtrl.Upload)
 
-		// enhance := api.Group("", app.middleware.Enhance())
+		enhance := api.Group("", app.middleware.Enhance())
 		{
-			api.POST("", app.cinemaCtrl.Create)
-			api.PATCH(":id", app.cinemaCtrl.Update)
-			api.DELETE(":id", app.cinemaCtrl.Delete)
+			enhance.POST("", app.cinemaCtrl.Create)
+			enhance.PATCH(":id", app.cinemaCtrl.Update)
+			enhance.DELETE(":id", app.cinemaCtrl.Delete)
 		}
 
 	}

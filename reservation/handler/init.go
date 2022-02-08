@@ -45,15 +45,15 @@ func (app *Handlers) RegisterRoutes(router *gin.Engine) *Handlers {
 		api.GET(":id", app.reservCtrl.Read)
 		api.GET("checkin/:id", app.reservCtrl.Checkin)
 
-		// simple := api.Group("", app.middleware.Simple())
+		simple := api.Group("", app.middleware.Simple())
 		{
-			api.POST("", app.reservCtrl.Create)
-			api.GET("", app.reservCtrl.All)
+			simple.POST("", app.reservCtrl.Create)
+			simple.GET("", app.reservCtrl.All)
 		}
-		// enhance := api.Group("", app.middleware.Enhance())
+		enhance := api.Group("", app.middleware.Enhance())
 		{
-			api.PATCH(":id", app.reservCtrl.Update)
-			api.DELETE(":id", app.reservCtrl.Delete)
+			enhance.PATCH(":id", app.reservCtrl.Update)
+			enhance.DELETE(":id", app.reservCtrl.Delete)
 		}
 	}
 

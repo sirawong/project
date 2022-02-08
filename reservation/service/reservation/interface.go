@@ -14,5 +14,5 @@ type Service interface {
 	Read(ctx context.Context, in *input.ReservationInput) (out *output.Reservation, err error)
 	Delete(ctx context.Context, in *input.ReservationInput) (err error)
 	Update(ctx context.Context, in *input.ReservationInput) (out *output.Reservation, err error)
-	Checkin(ctx context.Context, in *input.ReservationInput) (out *output.Reservation, err error)
+	Checkin(ctx context.Context, in *input.ReservationInput) (err error)
 }

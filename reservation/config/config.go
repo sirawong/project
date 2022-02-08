@@ -4,7 +4,7 @@ import "github.com/caarlos0/env"
 
 type Config struct {
 	AppPort string `env:"APP_PORT" envDefault:":8084"`
-	AppUrl  string `env:"APP_URL" envDefault:"localhost:8084/checkin"`
+	AppUrl  string `env:"APP_URL" envDefault:"localhost:8084/reservations/checkin"`
 
 	MongoDBEndpoint   string `env:"MONGODB_ENDPOINT" envDefault:"mongodb://localhost:27017"`
 	MongoDBName       string `env:"MONGODB_NAME" envDefault:"movie-booking"`

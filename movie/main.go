@@ -2,12 +2,15 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"os"
 
 	"cloud.google.com/go/storage"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	gOption "google.golang.org/api/option"
 
 	"movie/config"
 	"movie/handler"
@@ -66,8 +69,7 @@ func initDatabase(ctx context.Context, appConfig *config.Config) *mongo.Client {
 }
 
 func initStorage(ctx context.Context) *storage.Client {
-	// storageClient, err := storage.NewClient(ctx, setUpStorage())
-	storageClient, err := storage.NewClient(ctx)
+	storageClient, err := storage.NewClient(ctx, setUpStorage())
 	if err != nil {
 		logs.Error(err)
 		panic(err)
@@ -75,9 +77,9 @@ func initStorage(ctx context.Context) *storage.Client {
 	return storageClient
 }
 
-// func setUpStorage() gOption.ClientOption {
-// 	if _, err := os.Stat("config/key.json"); errors.Is(err, os.ErrNotExist) {
-// 		return gOption.WithoutAuthentication()
-// 	}
-// 	return gOption.WithCredentialsFile("config/key.json")
-// }
+func setUpStorage() gOption.ClientOption {
+	if _, err := os.Stat("config/key.json"); errors.Is(err, os.ErrNotExist) {
+		return gOption.WithoutAuthentication()
+	}
+	return gOption.WithCredentialsFile("config/key.json")
+}
