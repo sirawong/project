@@ -31,10 +31,11 @@ func TestGetAllCinema(t *testing.T) {
 
 	t.Run("Success", func(t *testing.T) {
 		cinemaRepo := &mocksRepo.CinemaRepository{}
+		storage := &mocksRepo.Storage{}
 
 		cinemaRepo.On("List", ctx, opt, &entities.Cinema{}).Return(1, mockItmes, nil)
 
-		service := implement.New(cinemaRepo, uuid, config)
+		service := implement.New(cinemaRepo, uuid, config, storage)
 		items, err := service.List(ctx, opt)
 		assert.Nil(t, err)
 		assert.Equal(t, len(mockItmes), len(items))
@@ -42,10 +43,11 @@ func TestGetAllCinema(t *testing.T) {
 
 	t.Run("Error", func(t *testing.T) {
 		cinemaRepo := &mocksRepo.CinemaRepository{}
+		storage := &mocksRepo.Storage{}
 
 		cinemaRepo.On("List", ctx, opt, &entities.Cinema{}).Return(1, mockItmes, errors.New("error"))
 
-		service := implement.New(cinemaRepo, uuid, config)
+		service := implement.New(cinemaRepo, uuid, config, storage)
 		_, err := service.List(ctx, opt)
 		assert.NotNil(t, err)
 	})

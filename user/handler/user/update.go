@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"user/handler/view"
 	"user/service/user/input"
@@ -24,17 +25,23 @@ import (
 func (ctrl *Controller) Update(c *gin.Context) {
 	ctx := context.Background()
 
+	userId := c.GetString("userid")
+	if userId == c.Param("id") {
+		view.HandleError(c, errors.New("admin not allow to update yourself"))
+		return
+	}
+
 	input := &input.UserInput{
 		ID: c.Param("id"),
 	}
 	if err := c.ShouldBindJSON(input); err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 
 	item, err := ctrl.userService.Update(ctx, input)
 	if err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 

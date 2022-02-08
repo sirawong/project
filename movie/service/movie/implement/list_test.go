@@ -32,10 +32,11 @@ func TestListCinema(t *testing.T) {
 
 	t.Run("Success", func(t *testing.T) {
 		repo := &mocksRepo.Repository{}
+		storage := &mocksRepo.Storage{}
 
 		repo.On("List", ctx, opt, &entities.Movie{}).Return(1, mockItmes, nil)
 
-		service := implement.New(repo, uuid, appConfig)
+		service := implement.New(repo, uuid, appConfig, storage)
 		items, err := service.List(ctx, opt)
 		assert.Nil(t, err)
 		assert.Equal(t, len(mockItmes), len(items))
@@ -43,10 +44,11 @@ func TestListCinema(t *testing.T) {
 
 	t.Run("Error", func(t *testing.T) {
 		repo := &mocksRepo.Repository{}
+		storage := &mocksRepo.Storage{}
 
 		repo.On("List", ctx, opt, &entities.Movie{}).Return(1, mockItmes, errors.New("error"))
 
-		service := implement.New(repo, uuid, appConfig)
+		service := implement.New(repo, uuid, appConfig, storage)
 		_, err := service.List(ctx, opt)
 		assert.NotNil(t, err)
 	})

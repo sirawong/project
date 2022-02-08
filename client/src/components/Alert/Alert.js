@@ -9,7 +9,7 @@ const Alert = ({ alerts }) =>
     <CustomizedSnackbar
       key={`custom-alert-${index}-${alert.id}`}
       isOpen={true}
-      vertical="top"
+      vertical="bottom"
       horizontal="right"
       variant={alert.alertType}
       message={alert.msg}

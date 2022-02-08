@@ -16,7 +16,7 @@ func (middleware Service) Simple() gin.HandlerFunc {
 			return
 		}
 
-		id, _, err := middleware.auth.Verify(c, encodedToken)
+		id, user, err := middleware.auth.Verify(c, encodedToken)
 		if err != nil {
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
@@ -24,6 +24,7 @@ func (middleware Service) Simple() gin.HandlerFunc {
 
 		c.Set("token", encodedToken)
 		c.Set("userid", id)
+		c.Set("role", user.Role)
 	}
 }
 

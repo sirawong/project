@@ -22,7 +22,7 @@ export const selectAllUsers = () => ({ type: SELECT_ALL_USERS });
 export const getUsers = () => async dispatch => {
   try {
     const token = localStorage.getItem('jwtToken');
-    const url = process.env.REACT_APP_BASE_URL + '/users';
+    const url = process.env.REACT_APP_BASE_USER_URL;
     const response = await fetch(url, {
       method: 'GET',
       headers: {
@@ -34,14 +34,14 @@ export const getUsers = () => async dispatch => {
       dispatch({ type: GET_USERS, payload: users });
     }
   } catch (error) {
-    dispatch(setAlert(error.message, 'error', 5000));
+    dispatch(setAlert(error.message, 'error', 2000));
   }
 };
 
 export const addUser = user => async dispatch => {
   try {
     const token = localStorage.getItem('jwtToken');
-    const url = process.env.REACT_APP_BASE_URL + '/users/';
+    const url = process.env.REACT_APP_BASE_USER_URL;
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -53,14 +53,14 @@ export const addUser = user => async dispatch => {
     const data = await response.json();
     const newUser = data.user;
     if (response.ok) {
-      dispatch(setAlert('User Created', 'success', 5000));
+      dispatch(setAlert('User Created', 'success', 2000));
       dispatch({ type: ADD_USER, payload: newUser });
       return { status: 'success', message: 'User Created' };
     } else {
       throw new Error(data._message);
     }
   } catch (error) {
-    dispatch(setAlert(error.message, 'error', 5000));
+    dispatch(setAlert(error.message, 'error', 2000));
     return {
       status: 'error',
       message: ' User have not been saved, try again.'
@@ -71,7 +71,7 @@ export const addUser = user => async dispatch => {
 export const updateUser = (user, id) => async dispatch => {
   try {
     const token = localStorage.getItem('jwtToken');
-    const url = process.env.REACT_APP_BASE_URL + '/users/' + id;
+    const url = process.env.REACT_APP_BASE_USER_URL + '/' + id;
     const response = await fetch(url, {
       method: 'PATCH',
       headers: {
@@ -83,14 +83,14 @@ export const updateUser = (user, id) => async dispatch => {
     const data = await response.json();
     const newUser = data.user;
     if (response.ok) {
-      dispatch(setAlert('User Updated', 'success', 5000));
+      dispatch(setAlert('User Updated', 'success', 2000));
       dispatch({ type: UPDATE_USER, payload: newUser });
       return { status: 'success', message: 'User Updated' };
     } else {
       throw new Error(data._message);
     }
   } catch (error) {
-    dispatch(setAlert(error.message, 'error', 5000));
+    dispatch(setAlert(error.message, 'error', 2000));
     return {
       status: 'error',
       message: ' User have not been saved, try again.'
@@ -101,7 +101,7 @@ export const updateUser = (user, id) => async dispatch => {
 export const deleteUser = id => async dispatch => {
   try {
     const token = localStorage.getItem('jwtToken');
-    const url = process.env.REACT_APP_BASE_URL + '/users/' + id;
+    const url = process.env.REACT_APP_BASE_USER_URL + '/'+ id;
     const response = await fetch(url, {
       method: 'DELETE',
       headers: {
@@ -111,14 +111,14 @@ export const deleteUser = id => async dispatch => {
     });
     const data = await response.json();
     if (response.ok) {
-      dispatch(setAlert('User Deleted', 'success', 5000));
+      dispatch(setAlert('User Deleted', 'success', 2000));
       dispatch({ type: DELETE_USER, payload: id });
       return { status: 'success', message: 'User Removed' };
     } else {
       throw new Error(data._message);
     }
   } catch (error) {
-    dispatch(setAlert(error.message, 'error', 5000));
+    dispatch(setAlert(error.message, 'error', 2000));
     return {
       status: 'error',
       message: ' User have not been deleted, try again.'

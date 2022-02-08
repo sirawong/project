@@ -11,7 +11,7 @@ import (
 	"user/entities"
 	"user/service/user/implement"
 
-	mocksRepo "user/repository/mocks"
+	mocks "user/repository/mocks"
 	mocksAuth "user/service/auth/mocks"
 	mocksUUID "user/utils/mocks"
 )
@@ -33,22 +33,24 @@ func TestGetAll(t *testing.T) {
 	ctx := context.Background()
 
 	t.Run("Success", func(t *testing.T) {
-		repo := &mocksRepo.Repository{}
+		repo := &mocks.Repository{}
+		storage := &mocks.Storage{}
 
 		repo.On("List", ctx, opt, &entities.User{}).Return(1, mockItmes, nil)
 
-		service := implement.New(repo, auth, uuid, appConfig)
+		service := implement.New(repo, auth, uuid, appConfig, storage)
 		items, err := service.All(ctx)
 		assert.Nil(t, err)
 		assert.Equal(t, len(mockItmes), len(items))
 	})
 
 	t.Run("Error", func(t *testing.T) {
-		repo := &mocksRepo.Repository{}
+		repo := &mocks.Repository{}
+		storage := &mocks.Storage{}
 
 		repo.On("List", ctx, opt, &entities.User{}).Return(1, mockItmes, errors.New("error"))
 
-		service := implement.New(repo, auth, uuid, appConfig)
+		service := implement.New(repo, auth, uuid, appConfig, storage)
 		_, err := service.All(ctx)
 		assert.NotNil(t, err)
 	})

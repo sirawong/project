@@ -11,7 +11,7 @@ type Movie struct {
 	Director    string    `bson:"director"`
 	Cast        string    `bson:"cast"`
 	Description string    `bson:"description"`
-	Duration    float32   `bson:"duration"`
+	Duration    string    `bson:"duration"`
 	ReleaseDate time.Time `bson:"releaseDate"`
 	EndDate     time.Time `bson:"endDate"`
 }

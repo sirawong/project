@@ -27,13 +27,13 @@ func (ctrl *Handlers) Create(c *gin.Context) {
 
 	input := &input.ReservationInput{}
 	if err := c.ShouldBindJSON(input); err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 
 	items, url, err := ctrl.service.Create(ctx, input)
 	if err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 

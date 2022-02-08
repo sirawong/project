@@ -3,6 +3,7 @@ package implement
 import (
 	"context"
 	"fmt"
+	"movie/entities"
 	"movie/errs"
 	"movie/logs"
 	"movie/service/movie/input"
@@ -15,6 +16,15 @@ func (impl *implementation) Update(ctx context.Context, in *input.MovieInput) (o
 	filters := []string{
 		fmt.Sprintf("_id:eq:%v", in.ID),
 	}
+
+	movie := &entities.Movie{}
+	err = impl.repo.Read(ctx, filters, movie)
+	if err != nil {
+		logs.Error(err)
+		return nil, errs.NewBadRequestError(err.Error())
+	}
+
+	ent.Image = movie.Image
 
 	err = impl.repo.Update(ctx, filters, ent)
 	if err != nil {

@@ -31,13 +31,14 @@ func TestReadCinema(t *testing.T) {
 
 	t.Run("Success", func(t *testing.T) {
 		repo := &mocksRepo.Repository{}
+		storage := &mocksRepo.Storage{}
 
 		repo.On("Read", ctx, filters, &entities.Movie{}).Return(nil).Run(func(args mock.Arguments) {
 			arg := args[2].(*entities.Movie)
 			arg.ID = mockInput.ID
 		})
 
-		service := implement.New(repo, uuid, appConfig)
+		service := implement.New(repo, uuid, appConfig, storage)
 		cinema, err := service.Read(ctx, mockInput)
 		assert.Nil(t, err)
 		assert.Equal(t, mockInput.ID, cinema.ID)
@@ -45,10 +46,11 @@ func TestReadCinema(t *testing.T) {
 
 	t.Run("Error", func(t *testing.T) {
 		repo := &mocksRepo.Repository{}
+		storage := &mocksRepo.Storage{}
 
 		repo.On("Read", ctx, filters, &entities.Movie{}).Return(errors.New("error"))
 
-		service := implement.New(repo, uuid, appConfig)
+		service := implement.New(repo, uuid, appConfig, storage)
 		_, err := service.Read(ctx, mockInput)
 		assert.NotNil(t, err)
 	})

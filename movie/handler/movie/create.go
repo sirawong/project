@@ -27,13 +27,13 @@ func (ctrl *Handlers) Create(c *gin.Context) {
 
 	input := &input.MovieInput{}
 	if err := c.ShouldBindJSON(input); err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 
 	items, err := ctrl.service.Create(ctx, input)
 	if err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 

@@ -31,8 +31,7 @@ func TestCreate(t *testing.T) {
 		ctx.Request, err = request.MakeCreateReq(mockInput)
 		assert.Nil(t, err)
 
-		token := "token"
-		cinemaSrv.On("Create", mock.Anything, mockInput).Return(cinema, &token, nil)
+		cinemaSrv.On("Create", mock.Anything, mockInput).Return(cinema, nil)
 
 		ctrl.Create(ctx)
 
@@ -62,7 +61,7 @@ func TestCreate(t *testing.T) {
 		ctx.Request, err = request.MakeCreateReq(mockInput)
 		assert.Nil(t, err)
 
-		cinemaSrv.On("Create", mock.Anything, mockInput).Return(nil, nil, errors.New("error"))
+		cinemaSrv.On("Create", mock.Anything, mockInput).Return(nil, errors.New("error"))
 
 		ctrl.Create(ctx)
 

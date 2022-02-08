@@ -30,12 +30,13 @@ func TestCreate(t *testing.T) {
 
 	t.Run("Success", func(t *testing.T) {
 		repo := &mocksRepo.Repository{}
+		storage := &mocksRepo.Storage{}
 
 		uuid.On("Generate").Return("id")
 		repo.On("Create", ctx, mock.Anything).Return("id", nil)
 		auth.On("GenAuth", ctx, mock.Anything).Return(&token, nil)
 
-		service := implement.New(repo, auth, uuid, appConfig)
+		service := implement.New(repo, auth, uuid, appConfig, storage)
 		items, _, err := service.Create(ctx, &input.UserInput{Name: name})
 		assert.Nil(t, err)
 		assert.Equal(t, inputData.Name, items.Name)
@@ -44,10 +45,11 @@ func TestCreate(t *testing.T) {
 
 	t.Run("Error", func(t *testing.T) {
 		repo := &mocksRepo.Repository{}
+		storage := &mocksRepo.Storage{}
 		uuid.On("Generate").Return("id")
 		repo.On("Create", ctx, mock.Anything).Return("", errors.New("error"))
 
-		service := implement.New(repo, auth, uuid, appConfig)
+		service := implement.New(repo, auth, uuid, appConfig, storage)
 		_, _, err := service.Create(ctx, &input.UserInput{})
 		assert.NotNil(t, err)
 	})

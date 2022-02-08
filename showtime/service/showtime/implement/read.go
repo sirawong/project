@@ -3,7 +3,6 @@ package implement
 import (
 	"context"
 	"fmt"
-	"log"
 	"showtime/entities"
 	"showtime/errs"
 	"showtime/logs"
@@ -22,6 +21,5 @@ func (impl *implementation) Read(ctx context.Context, in *input.ReadInput) (out 
 		logs.Error(err)
 		return nil, errs.NewBadRequestError(err.Error())
 	}
-	log.Println(showtime)
 	return output.ParseToOutput(showtime), nil
 }

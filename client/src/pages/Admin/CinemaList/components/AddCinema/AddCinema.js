@@ -18,7 +18,7 @@ class AddCinema extends Component {
   state = {
     _id: '',
     name: '',
-    image: null,
+    image: '',
     ticketPrice: '',
     city: '',
     seatsAvailable: '',
@@ -60,8 +60,8 @@ class AddCinema extends Component {
     type === 'create'
       ? (notification = await createCinemas(image, cinema))
       : type === 'update'
-      ? (notification = await updateCinemas(image, cinema, _id))
-      : (notification = await removeCinemas(_id));
+      ? (notification = await updateCinemas(image, cinema, this.props.editCinema._id))
+      : (notification = await removeCinemas(this.props.editCinema._id));
     this.setState({ notification });
     if (notification && notification.status === 'success') getCinemas();
   };
@@ -99,7 +99,7 @@ class AddCinema extends Component {
                 className={classes.textField}
                 label={
                   'Add number of seats for row : ' +
-                  (index + 10).toString(36).toUpperCase()
+                  (index + 10).toString(36).toUpperCase() + 'min 0 - max 10'
                 }
                 margin="dense"
                 required
@@ -201,6 +201,7 @@ class AddCinema extends Component {
               label="Seats Available"
               margin="dense"
               required
+              type="number"
               value={seatsAvailable}
               variant="outlined"
               onChange={event =>

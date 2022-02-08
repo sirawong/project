@@ -1,18 +1,18 @@
 package handler
 
 import (
-	"fmt"
-	"movie/errs"
 	"net/http"
+
+	"movie/errs"
+
+	"github.com/gin-gonic/gin"
 )
 
-func HandleError(w http.ResponseWriter, err error) {
+func HandleError(c *gin.Context, err error) {
 	switch e := err.(type) {
 	case errs.AppError:
-		w.WriteHeader(e.Code)
-		fmt.Fprintln(w, e)
+		c.AbortWithStatusJSON(e.Code, err)
 	case error:
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintln(w, e)
+		c.AbortWithStatus(http.StatusInternalServerError)
 	}
 }

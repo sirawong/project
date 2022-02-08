@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withStyles, Grid, Container } from '@material-ui/core';
+import { withStyles, Grid, Container, Box } from '@material-ui/core';
 import {
   getMovie,
   // getCinemasUserModeling,
@@ -45,7 +45,7 @@ class BookingPage extends Component {
       getCinemas,
       // getCinemasUserModeling,
       getShowtimes,
-      getReservations,
+      getReservations
       // getSuggestedReservationSeats
     } = this.props;
     getMovie(match.params.id);
@@ -148,11 +148,13 @@ class BookingPage extends Component {
     if (selectedSeats.length === 0) return;
 
     const bookedSeats = seats
-      .map(row =>
-        row.map((seat, i) => (seat === 2 ? i : -1)).filter(seat => seat !== -1)
+      .map((row) =>
+        row
+          .map((seat, i) => (seat === 2 ? i : -1))
+          .filter((seat) => seat !== -1)
       )
-      .map((seats, i) => (seats.length ? seats.map(seat => [i, seat]) : -1))
-      .filter(seat => seat !== -1)
+      .map((seats, i) => (seats.length ? seats.map((seat) => [i, seat]) : -1))
+      .filter((seat) => seat !== -1)
       .reduce((a, b) => a.concat(b));
 
     return bookedSeats;
@@ -164,21 +166,21 @@ class BookingPage extends Component {
     if (!showtimes || !cinemas) return initialReturn;
 
     const uniqueCinemasId = showtimes
-      .filter(showtime =>
+      .filter((showtime) =>
         selectedTime ? showtime.startAt === selectedTime : true
       )
-      .map(showtime => showtime.cinemaId)
+      .map((showtime) => showtime.cinemaId)
       .filter((value, index, self) => self.indexOf(value) === index);
 
-    const uniqueCinemas = cinemas.filter(cinema =>
+    const uniqueCinemas = cinemas.filter((cinema) =>
       uniqueCinemasId.includes(cinema._id)
     );
 
     const uniqueTimes = showtimes
-      .filter(showtime =>
+      .filter((showtime) =>
         selectedCinema ? selectedCinema === showtime.cinemaId : true
       )
-      .map(showtime => showtime.startAt)
+      .map((showtime) => showtime.startAt)
       .filter((value, index, self) => self.indexOf(value) === index)
       .sort(
         (a, b) => new Date('1970/01/01 ' + a) - new Date('1970/01/01 ' + b)
@@ -194,14 +196,14 @@ class BookingPage extends Component {
     const newSeats = [...cinema.seats];
 
     const filteredReservations = reservations.filter(
-      reservation =>
+      (reservation) =>
         new Date(reservation.date).toLocaleDateString() ===
           new Date(selectedDate).toLocaleDateString() &&
         reservation.startAt === selectedTime
     );
     if (filteredReservations.length && selectedDate && selectedTime) {
       const reservedSeats = filteredReservations
-        .map(reservation => reservation.seats)
+        .map((reservation) => reservation.seats)
         .reduce((a, b) => a.concat(b));
       reservedSeats.forEach(([row, seat]) => (newSeats[row][seat] = 1));
       return newSeats;
@@ -212,7 +214,7 @@ class BookingPage extends Component {
   onGetSuggestedSeats = (seats, suggestedSeats) => {
     const { numberOfTickets, positions } = suggestedSeats;
 
-    const positionsArray = Object.keys(positions).map(key => {
+    const positionsArray = Object.keys(positions).map((key) => {
       return [String(key), positions[key]];
     });
 
@@ -220,7 +222,7 @@ class BookingPage extends Component {
       return b[1] - a[1];
     });
 
-    if (positionsArray.every(position => position[1] === 0)) return;
+    if (positionsArray.every((position) => position[1] === 0)) return;
 
     const step = Math.round(seats.length / 3);
     let indexArr = [];
@@ -280,16 +282,16 @@ class BookingPage extends Component {
     }
   };
 
-  onChangeCinema = event => this.props.setSelectedCinema(event.target.value);
-  onChangeDate = date => this.props.setSelectedDate(date);
-  onChangeTime = event => this.props.setSelectedTime(event.target.value);
+  onChangeCinema = (event) => this.props.setSelectedCinema(event.target.value);
+  onChangeDate = (date) => this.props.setSelectedDate(date);
+  onChangeTime = (event) => this.props.setSelectedTime(event.target.value);
 
   sendInvitations = async () => {
     const invitations = this.createInvitations();
     if (!invitations) return;
     try {
       const token = localStorage.getItem('jwtToken');
-      const url = process.env.REACT_APP_BASE_URL + '/reservations/invitations';
+      const url = process.env.REACT_APP_BASE_RESERVATION_URL + '/invitations';
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -313,17 +315,11 @@ class BookingPage extends Component {
   };
 
   createInvitations = () => {
-    const {
-      user,
-      movie,
-      cinema,
-      selectedDate,
-      selectedTime,
-      invitations
-    } = this.props;
+    const { user, movie, cinema, selectedDate, selectedTime, invitations } =
+      this.props;
 
     const invArray = Object.keys(invitations)
-      .map(key => ({
+      .map((key) => ({
         to: invitations[key],
         host: user.name,
         movie: movie.title,
@@ -333,12 +329,12 @@ class BookingPage extends Component {
         image: cinema.image,
         seat: key
       }))
-      .filter(inv => inv.to !== '');
+      .filter((inv) => inv.to !== '');
     return invArray;
   };
 
   setSuggestionSeats = (seats, suggestedSeats) => {
-    suggestedSeats.forEach(suggestedSeat => {
+    suggestedSeats.forEach((suggestedSeat) => {
       seats[suggestedSeat[0]][suggestedSeat[1]] = 3;
     });
     return seats;
@@ -391,14 +387,15 @@ class BookingPage extends Component {
               onChangeTime={this.onChangeTime}
             />
             {showInvitation && !!selectedSeats.length && (
-              <BookingInvitation
-                selectedSeats={selectedSeats}
-                sendInvitations={this.sendInvitations}
-                ignore={resetCheckout}
-                invitations={invitations}
-                onSetInvitation={setInvitation}
-                onDownloadPDF={this.jsPdfGenerator}
-              />
+              //   <BookingInvitation
+              //   selectedSeats={selectedSeats}
+              //   sendInvitations={this.sendInvitations}
+              //   ignore={resetCheckout}
+              //   invitations={invitations}
+              //   onSetInvitation={setInvitation}
+              //   onDownloadPDF={this.jsPdfGenerator}
+              // />
+              <BookingInvitation invitations={invitations} data={this.props} />
             )}
 
             {cinema && selectedCinema && selectedTime && !showInvitation && (
@@ -455,7 +452,7 @@ const mapStateToProps = (
   cinema: cinemaState.selectedCinema,
   cinemas: cinemaState.cinemas,
   showtimes: showtimeState.showtimes.filter(
-    showtime => showtime.movieId === ownProps.match.params.id
+    (showtime) => showtime.movieId === ownProps.match.params.id
   ),
   reservations: reservationState.reservations,
   selectedSeats: checkoutState.selectedSeats,

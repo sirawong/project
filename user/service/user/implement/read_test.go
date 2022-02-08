@@ -35,13 +35,14 @@ func TestRead(t *testing.T) {
 
 	t.Run("Success", func(t *testing.T) {
 		repo := &mocksRepo.Repository{}
+		storage := &mocksRepo.Storage{}
 
 		repo.On("Read", ctx, filters, &entities.User{}).Return(nil).Run(func(args mock.Arguments) {
 			arg := args[2].(*entities.User)
 			arg.ID = mockInput.ID
 		})
 
-		service := implement.New(repo, auth, uuid, appConfig)
+		service := implement.New(repo, auth, uuid, appConfig, storage)
 		item, err := service.Read(ctx, mockInput)
 		assert.Nil(t, err)
 		assert.Equal(t, mockInput.ID, item.ID)
@@ -49,10 +50,11 @@ func TestRead(t *testing.T) {
 
 	t.Run("Error", func(t *testing.T) {
 		repo := &mocksRepo.Repository{}
+		storage := &mocksRepo.Storage{}
 
 		repo.On("Read", ctx, filters, &entities.User{}).Return(errors.New("error"))
 
-		service := implement.New(repo, auth, uuid, appConfig)
+		service := implement.New(repo, auth, uuid, appConfig, storage)
 		_, err := service.Read(ctx, mockInput)
 		assert.NotNil(t, err)
 	})

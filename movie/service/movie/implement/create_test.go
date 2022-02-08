@@ -27,11 +27,12 @@ func TestCreateCinema(t *testing.T) {
 
 	t.Run("Success", func(t *testing.T) {
 		repo := &mocksRepo.Repository{}
+		storage := &mocksRepo.Storage{}
 
 		uuid.On("Generate").Return("1")
 		repo.On("Create", ctx, mock.Anything).Return("1", nil)
 
-		service := implement.New(repo, uuid, appConfig)
+		service := implement.New(repo, uuid, appConfig, storage)
 		items, err := service.Create(ctx, &input.MovieInput{Title: "dev"})
 		assert.Nil(t, err)
 		assert.Equal(t, inputData.Title, items.Title)
@@ -39,10 +40,11 @@ func TestCreateCinema(t *testing.T) {
 
 	t.Run("Error", func(t *testing.T) {
 		repo := &mocksRepo.Repository{}
+		storage := &mocksRepo.Storage{}
 		uuid.On("Generate").Return("1")
 		repo.On("Create", ctx, mock.Anything).Return("1", errors.New("error"))
 
-		service := implement.New(repo, uuid, appConfig)
+		service := implement.New(repo, uuid, appConfig, storage)
 		_, err := service.Create(ctx, &input.MovieInput{})
 		assert.NotNil(t, err)
 	})

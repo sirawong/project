@@ -3,11 +3,8 @@
 package mocks
 
 import (
-	bytes "bytes"
-	cinema "cinema/service/cinema"
-	context "context"
-
 	entities "cinema/entities"
+	context "context"
 
 	input "cinema/service/cinema/input"
 
@@ -129,13 +126,13 @@ func (_m *CinemaService) Update(ctx context.Context, in *input.CinemaInput) (*ou
 	return r0, r1
 }
 
-// Upload provides a mock function with given fields: ctx, client, body, writer, in
-func (_m *CinemaService) Upload(ctx context.Context, client cinema.HttpClienter, body *bytes.Buffer, writer *multipart.Writer, in *input.CinemaInput) (*output.Cinema, error) {
-	ret := _m.Called(ctx, client, body, writer, in)
+// Upload provides a mock function with given fields: ctx, in, filename, file
+func (_m *CinemaService) Upload(ctx context.Context, in *input.CinemaInput, filename string, file multipart.File) (*output.Cinema, error) {
+	ret := _m.Called(ctx, in, filename, file)
 
 	var r0 *output.Cinema
-	if rf, ok := ret.Get(0).(func(context.Context, cinema.HttpClienter, *bytes.Buffer, *multipart.Writer, *input.CinemaInput) *output.Cinema); ok {
-		r0 = rf(ctx, client, body, writer, in)
+	if rf, ok := ret.Get(0).(func(context.Context, *input.CinemaInput, string, multipart.File) *output.Cinema); ok {
+		r0 = rf(ctx, in, filename, file)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*output.Cinema)
@@ -143,8 +140,8 @@ func (_m *CinemaService) Upload(ctx context.Context, client cinema.HttpClienter,
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, cinema.HttpClienter, *bytes.Buffer, *multipart.Writer, *input.CinemaInput) error); ok {
-		r1 = rf(ctx, client, body, writer, in)
+	if rf, ok := ret.Get(1).(func(context.Context, *input.CinemaInput, string, multipart.File) error); ok {
+		r1 = rf(ctx, in, filename, file)
 	} else {
 		r1 = ret.Error(1)
 	}

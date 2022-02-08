@@ -18,6 +18,29 @@ type Service struct {
 	mock.Mock
 }
 
+// Checkin provides a mock function with given fields: ctx, in
+func (_m *Service) Checkin(ctx context.Context, in *input.ReservationInput) (*output.Reservation, error) {
+	ret := _m.Called(ctx, in)
+
+	var r0 *output.Reservation
+	if rf, ok := ret.Get(0).(func(context.Context, *input.ReservationInput) *output.Reservation); ok {
+		r0 = rf(ctx, in)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*output.Reservation)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *input.ReservationInput) error); ok {
+		r1 = rf(ctx, in)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Create provides a mock function with given fields: ctx, in
 func (_m *Service) Create(ctx context.Context, in *input.ReservationInput) (*output.Reservation, string, error) {
 	ret := _m.Called(ctx, in)
@@ -95,29 +118,6 @@ func (_m *Service) Read(ctx context.Context, in *input.ReservationInput) (*outpu
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*output.Reservation)
-		}
-	}
-
-	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, *input.ReservationInput) error); ok {
-		r1 = rf(ctx, in)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// SuggestSeats provides a mock function with given fields: ctx, in
-func (_m *Service) SuggestSeats(ctx context.Context, in *input.ReservationInput) (*output.SuggestSeats, error) {
-	ret := _m.Called(ctx, in)
-
-	var r0 *output.SuggestSeats
-	if rf, ok := ret.Get(0).(func(context.Context, *input.ReservationInput) *output.SuggestSeats); ok {
-		r0 = rf(ctx, in)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*output.SuggestSeats)
 		}
 	}
 

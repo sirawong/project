@@ -14,27 +14,28 @@ export const uploadImage = (id, image) => async dispatch => {
   try {
     const data = new FormData();
     data.append('file', image);
-    const url = process.env.REACT_APP_BASE_URL + '/users/photo/' + id;
+    const url = process.env.REACT_APP_BASE_USER_URL + '/photo/' + id;
     const response = await fetch(url, {
       method: 'POST',
       body: data
     });
+    console.log("test")
     const responseData = await response.json();
     if (response.ok) {
-      dispatch(setAlert('Image Uploaded', 'success', 5000));
+      dispatch(setAlert('Image Uploaded', 'success', 2000));
     }
     if (responseData.error) {
-      dispatch(setAlert(responseData.error.message, 'error', 5000));
+      dispatch(setAlert(responseData.error.message, 'error', 2000));
     }
   } catch (error) {
-    dispatch(setAlert(error.message, 'error', 5000));
+    dispatch(setAlert(error.message, 'error', 2000));
   }
 };
 
 // Login user
 export const login = (username, password) => async dispatch => {
   try {
-    const url = process.env.REACT_APP_BASE_URL + '/users/login';
+    const url = process.env.REACT_APP_BASE_USER_URL + '/login';
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -45,15 +46,15 @@ export const login = (username, password) => async dispatch => {
       const { user } = responseData;
       user && setUser(user);
       dispatch({ type: LOGIN_SUCCESS, payload: responseData });
-      dispatch(setAlert(`Welcome ${user.name}`, 'success', 5000));
+      dispatch(setAlert(`Welcome ${user.name}`, 'success', 2000));
     }
     if (responseData.error) {
       dispatch({ type: LOGIN_FAIL });
-      dispatch(setAlert(responseData.error.message, 'error', 5000));
+      dispatch(setAlert(responseData.error.message, 'error', 2000));
     }
   } catch (error) {
     dispatch({ type: LOGIN_FAIL });
-    dispatch(setAlert(error.message, 'error', 5000));
+    dispatch(setAlert(error.message, 'error', 2000));
   }
 };
 
@@ -65,7 +66,7 @@ export const login = (username, password) => async dispatch => {
 //       headers: { 'Content-Type': 'application/json' },
 //       body: JSON.stringify({ email, userID, name })
 //     };
-//     const url = process.env.REACT_APP_BASE_URL + '/users/login/facebook';
+//     const url = process.env.REACT_APP_BASE_USER_URL + 'login/facebook';
 //     const response = await fetch(url, options);
 //     const responseData = await response.json();
 
@@ -73,15 +74,15 @@ export const login = (username, password) => async dispatch => {
 //       const { user } = responseData;
 //       user && setUser(user);
 //       dispatch({ type: LOGIN_SUCCESS, payload: responseData });
-//       dispatch(setAlert(`Welcome ${user.name}`, 'success', 5000));
+//       dispatch(setAlert(`Welcome ${user.name}`, 'success', 2000));
 //     }
 //     if (responseData.error) {
 //       dispatch({ type: LOGIN_FAIL });
-//       dispatch(setAlert(responseData.error.message, 'error', 5000));
+//       dispatch(setAlert(responseData.error.message, 'error', 2000));
 //     }
 //   } catch (error) {
 //     dispatch({ type: LOGIN_FAIL });
-//     dispatch(setAlert(error.message, 'error', 5000));
+//     dispatch(setAlert(error.message, 'error', 2000));
 //   }
 // };
 
@@ -93,7 +94,7 @@ export const login = (username, password) => async dispatch => {
 //       headers: { 'Content-Type': 'application/json' },
 //       body: JSON.stringify({ email, googleId, name })
 //     };
-//     const url = process.env.REACT_APP_BASE_URL + '/users/login/google';
+//     const url = process.env.REACT_APP_BASE_USER_URL + 'login/google';
 //     const response = await fetch(url, options);
 //     const responseData = await response.json();
 
@@ -101,15 +102,15 @@ export const login = (username, password) => async dispatch => {
 //       const { user } = responseData;
 //       user && setUser(user);
 //       dispatch({ type: LOGIN_SUCCESS, payload: responseData });
-//       dispatch(setAlert(`Welcome ${user.name}`, 'success', 5000));
+//       dispatch(setAlert(`Welcome ${user.name}`, 'success', 2000));
 //     }
 //     if (responseData.error) {
 //       dispatch({ type: LOGIN_FAIL });
-//       dispatch(setAlert(responseData.error.message, 'error', 5000));
+//       dispatch(setAlert(responseData.error.message, 'error', 2000));
 //     }
 //   } catch (error) {
 //     dispatch({ type: LOGIN_FAIL });
-//     dispatch(setAlert(error.message, 'error', 5000));
+//     dispatch(setAlert(error.message, 'error', 2000));
 //   }
 // };
 
@@ -123,7 +124,7 @@ export const register = ({
   password
 }) => async dispatch => {
   try {
-    const url = process.env.REACT_APP_BASE_URL + '/users';
+    const url = process.env.REACT_APP_BASE_USER_URL;
     const body = { name, username, email, phone, password };
     const response = await fetch(url, {
       method: 'POST',
@@ -136,15 +137,15 @@ export const register = ({
       user && setUser(user);
       if (image) dispatch(uploadImage(user._id, image)); // Upload image
       dispatch({ type: REGISTER_SUCCESS, payload: responseData });
-      dispatch(setAlert('Register Success', 'success', 5000));
+      dispatch(setAlert('Register Success', 'success', 2000));
     }
     if (responseData._message) {
       dispatch({ type: REGISTER_FAIL });
-      dispatch(setAlert(responseData.message, 'error', 5000));
+      dispatch(setAlert(responseData.message, 'error', 2000));
     }
   } catch (error) {
     dispatch({ type: REGISTER_FAIL });
-    dispatch(setAlert(error.message, 'error', 5000));
+    dispatch(setAlert(error.message, 'error', 2000));
   }
 };
 
@@ -152,7 +153,7 @@ export const register = ({
 export const loadUser = () => async dispatch => {
   if (!isLoggedIn()) return;
   try {
-    const url = process.env.REACT_APP_BASE_URL + '/users/me';
+    const url = process.env.REACT_APP_BASE_USER_URL + '/me';
     const response = await fetch(url, {
       method: 'GET',
       headers: setAuthHeaders()
@@ -173,7 +174,7 @@ export const loadUser = () => async dispatch => {
 export const logout = () => async dispatch => {
   try {
     const token = localStorage.getItem('jwtToken');
-    const url =   process.env.REACT_APP_BASE_URL + '/users/logout';
+    const url =   process.env.REACT_APP_BASE_USER_URL + '/logout';
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -185,12 +186,12 @@ export const logout = () => async dispatch => {
     if (response.ok) {
       removeUser();
       dispatch({ type: LOGOUT });
-      dispatch(setAlert('LOGOUT Success', 'success', 5000));
+      dispatch(setAlert('LOGOUT Success', 'success', 2000));
     }
     if (responseData.error) {
-      dispatch(setAlert(responseData.error.message, 'error', 5000));
+      dispatch(setAlert(responseData.error.message, 'error', 2000));
     }
   } catch (error) {
-    dispatch(setAlert(error.message, 'error', 5000));
+    dispatch(setAlert(error.message, 'error', 2000));
   }
 };

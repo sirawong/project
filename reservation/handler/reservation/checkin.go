@@ -21,24 +21,19 @@ import (
 // @Success 400 {object} view.ErrResp
 // @Success 401 {object} view.ErrResp
 // @Success 500 {object} view.ErrResp
-// @Router /reservations/:id [get]
+// @Router /reservations/checkin/:id [get]
 func (ctrl *Handlers) Checkin(c *gin.Context) {
 	ctx := context.Background()
 
 	input := &input.ReservationInput{
-		ID:      c.Param("id"),
-		Checkin: true,
-	}
-	if err := c.ShouldBindJSON(input); err != nil {
-		view.HandleError(c.Writer, err)
-		return
+		ID: c.Param("id"),
 	}
 
-	item, err := ctrl.service.Update(ctx, input)
+	err := ctrl.service.Checkin(ctx, input)
 	if err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 
-	view.MakeSuccessResp(c, http.StatusOK, item)
+	view.MakeSuccessResp(c, http.StatusOK, map[string]string{"message": "Enjoy the movie!"})
 }

@@ -25,8 +25,9 @@ func TestUpdate(t *testing.T) {
 	auth := &mocksAuth.Service{}
 
 	mockInput := &input.UserInput{
-		ID:   "1",
-		Name: "dev",
+		ID:       "1",
+		Name:     "dev",
+		Password: "test",
 	}
 
 	filters := []string{
@@ -37,6 +38,7 @@ func TestUpdate(t *testing.T) {
 
 	t.Run("Success", func(t *testing.T) {
 		repo := &mocksRepo.Repository{}
+		storage := &mocksRepo.Storage{}
 
 		repo.On("Read", ctx, filters, mock.Anything).Return(nil).Run(func(args mock.Arguments) {
 			arg := args[2].(*entities.User)
@@ -44,7 +46,7 @@ func TestUpdate(t *testing.T) {
 		})
 		repo.On("Update", ctx, filters, mock.Anything).Return(nil)
 
-		service := implement.New(repo, auth, uuid, appConfig)
+		service := implement.New(repo, auth, uuid, appConfig, storage)
 		item, err := service.Update(ctx, mockInput)
 		assert.Nil(t, err)
 		assert.Equal(t, mockInput.ID, item.ID)
@@ -52,21 +54,12 @@ func TestUpdate(t *testing.T) {
 
 	t.Run("Error: Update", func(t *testing.T) {
 		repo := &mocksRepo.Repository{}
+		storage := &mocksRepo.Storage{}
 
 		repo.On("Read", ctx, filters, mock.Anything).Return(nil)
 		repo.On("Update", ctx, filters, mock.Anything).Return(errors.New("error"))
 
-		service := implement.New(repo, auth, uuid, appConfig)
-		_, err := service.Update(ctx, mockInput)
-		assert.NotNil(t, err)
-	})
-
-	t.Run("Error: Read", func(t *testing.T) {
-		repo := &mocksRepo.Repository{}
-
-		repo.On("Read", ctx, filters, mock.Anything).Return(errors.New("error"))
-
-		service := implement.New(repo, auth, uuid, appConfig)
+		service := implement.New(repo, auth, uuid, appConfig, storage)
 		_, err := service.Update(ctx, mockInput)
 		assert.NotNil(t, err)
 	})
@@ -74,11 +67,12 @@ func TestUpdate(t *testing.T) {
 	t.Run("GenPassword", func(t *testing.T) {
 		repo := &mocksRepo.Repository{}
 		mockInput.Password = "1"
+		storage := &mocksRepo.Storage{}
 
 		repo.On("Read", ctx, filters, mock.Anything).Return(nil)
 		repo.On("Update", ctx, filters, mock.Anything).Return(nil)
 
-		service := implement.New(repo, auth, uuid, appConfig)
+		service := implement.New(repo, auth, uuid, appConfig, storage)
 		_, err := service.Update(ctx, mockInput)
 		assert.Nil(t, err)
 	})

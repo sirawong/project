@@ -11,7 +11,9 @@ type UpdateInput struct {
 	StartDate  time.Time `json:"startDate"`
 	EndDate    time.Time `json:"endDate"`
 	MovieId    string    `json:"movieId"`
-	CinemaId string    `json:"cinemaId"`
+	MovieName  string    `json:"movieName"`
+	CinemaId   string    `json:"cinemaId"`
+	CinemaName string    `json:"cinemaName"`
 }
 
 func (input *UpdateInput) ParseToEntities() (ent *entities.ShowTime) {
@@ -21,6 +23,8 @@ func (input *UpdateInput) ParseToEntities() (ent *entities.ShowTime) {
 		StartDate:  input.StartDate,
 		EndDate:    input.EndDate,
 		MovieId:    input.MovieId,
-		CinemaId: input.CinemaId,
+		MovieName:  input.MovieName,
+		CinemaId:   input.CinemaId,
+		CinemaName: input.CinemaName,
 	}
 }

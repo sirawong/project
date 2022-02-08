@@ -19,7 +19,7 @@ class AddShowtime extends Component {
     startDate: null,
     endDate: null,
     movieId: '',
-    cinemaId: ''
+    movieName: '',
   };
 
   componentDidMount() {
@@ -148,7 +148,7 @@ class AddShowtime extends Component {
               value={movieId}
               variant="outlined"
               onChange={event =>
-                this.handleFieldChange('movieId', event.target.value)
+                this.handleFieldChange('movieId',event.target.value)
               }>
               {nowShowing.map(movie => (
                 <MenuItem key={movie._id} value={movie._id}>
@@ -167,7 +167,7 @@ class AddShowtime extends Component {
               value={cinemaId}
               variant="outlined"
               onChange={event =>
-                this.handleFieldChange('cinemaId', event.target.value)
+               this.handleFieldChange('cinemaId',event.target.value)
               }>
               {cinemas.map(cinema => (
                 <MenuItem key={cinema._id} value={cinema._id}>

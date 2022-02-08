@@ -31,7 +31,7 @@ func (ctrl *Handlers) Delete(c *gin.Context) {
 
 	err := ctrl.service.Delete(ctx, input)
 	if err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 

@@ -31,7 +31,7 @@ func (ctrl *Handlers) Read(c *gin.Context) {
 
 	item, err := ctrl.service.Read(ctx, input)
 	if err != nil {
-		view.HandleError(c.Writer, err)
+		view.HandleError(c, err)
 		return
 	}
 

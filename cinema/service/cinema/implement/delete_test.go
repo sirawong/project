@@ -30,20 +30,22 @@ func TestDeleteCinema(t *testing.T) {
 
 	t.Run("Success", func(t *testing.T) {
 		cinemaRepo := &mocksRepo.CinemaRepository{}
+		storage := &mocksRepo.Storage{}
 
 		cinemaRepo.On("Delete", ctx, filters).Return(nil)
 
-		service := implement.New(cinemaRepo, uuid, config)
+		service := implement.New(cinemaRepo, uuid, config, storage)
 		err := service.Delete(ctx, mockInput)
 		assert.Nil(t, err)
 	})
 
 	t.Run("Error", func(t *testing.T) {
 		cinemaRepo := &mocksRepo.CinemaRepository{}
+		storage := &mocksRepo.Storage{}
 
 		cinemaRepo.On("Delete", ctx, filters).Return(errors.New("error"))
 
-		service := implement.New(cinemaRepo, uuid, config)
+		service := implement.New(cinemaRepo, uuid, config, storage)
 		err := service.Delete(ctx, mockInput)
 		assert.NotNil(t, err)
 	})

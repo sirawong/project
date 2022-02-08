@@ -8,5 +8,7 @@ type ShowTime struct {
 	StartDate  time.Time `bson:"startDate"`
 	EndDate    time.Time `bson:"endDate"`
 	MovieId    string    `bson:"movieId"`
-	CinemaId string    `bson:"cinemaId"`
+	MovieName  string    `bson:"movieName"`
+	CinemaId   string    `bson:"cinemaId"`
+	CinemaName string    `bson:"cinemaName"`
 }

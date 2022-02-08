@@ -39,7 +39,7 @@ class Account extends Component {
       const token = localStorage.getItem('jwtToken');
       let body = { name, email, phone };
       if (password) body = { ...body, password };
-      const url = process.env.REACT_APP_BASE_URL + '/users/me';
+      const url = process.env.REACT_APP_BASE_USER_URL + '/me';
       const response = await fetch(url, {
         method: 'PATCH',
         headers: {

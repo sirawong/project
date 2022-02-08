@@ -15,7 +15,6 @@ import (
 )
 
 func (impl *implementation) Update(ctx context.Context, in *input.UserInput) (out *output.User, err error) {
-
 	filters := []string{
 		fmt.Sprintf("_id:eq:%v", in.ID),
 	}
@@ -24,7 +23,7 @@ func (impl *implementation) Update(ctx context.Context, in *input.UserInput) (ou
 	err = impl.repo.Read(ctx, filters, user)
 	if err != nil {
 		logs.Error(err)
-		return nil, errs.NewBadRequestError(err.Error())
+		return nil, errs.NewBadRequestError("User not found")
 	}
 
 	ent := in.ParseToEntities()
@@ -36,12 +35,17 @@ func (impl *implementation) Update(ctx context.Context, in *input.UserInput) (ou
 			return nil, errs.NewUnexpectedError()
 		}
 		ent.Password = string(hashing)
+	} else {
+		ent.Password = user.Password
 	}
-	if ent.Role == "" {
+
+	if user.Role == "" {
 		ent.Role = user.Role
 	}
 
-	ent.ID = user.ID
+	ent.Imageurl = user.Imageurl
+	ent.Username = user.Username
+	ent.CreatedAt = user.CreatedAt
 	ent.UpdatedAt = time.Now()
 
 	err = impl.repo.Update(ctx, filters, ent)
@@ -50,5 +54,5 @@ func (impl *implementation) Update(ctx context.Context, in *input.UserInput) (ou
 		return nil, errs.NewBadRequestError(err.Error())
 	}
 
-	return output.ParseToOutput(ent), nil
+	return output.ParseToOutput(user), nil
 }

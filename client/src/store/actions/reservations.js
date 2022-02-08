@@ -4,7 +4,7 @@ import { setAlert } from './alert';
 export const getReservations = () => async dispatch => {
   try {
     const token = localStorage.getItem('jwtToken');
-    const url = process.env.REACT_APP_BASE_URL + '/reservations';
+    const url = process.env.REACT_APP_BASE_RESERVATION_URL;
     const response = await fetch(url, {
       method: 'GET',
       headers: {
@@ -16,14 +16,14 @@ export const getReservations = () => async dispatch => {
       dispatch({ type: GET_RESERVATIONS, payload: reservations });
     }
   } catch (error) {
-    dispatch(setAlert(error.message, 'error', 5000));
+    dispatch(setAlert(error.message, 'error', 2000));
   }
 };
 
 // export const getSuggestedReservationSeats = username => async dispatch => {
 //   try {
 //     const token = localStorage.getItem('jwtToken');
-//     const url = process.env.REACT_APP_BASE_URL + '/reservations/usermodeling/' + username;
+//     const url = process.env.REACT_APP_BASE_RESERVATION_URL+ '/usermodeling/' + username;
 //     const response = await fetch(url, {
 //       method: 'GET',
 //       headers: {
@@ -38,14 +38,14 @@ export const getReservations = () => async dispatch => {
 //       });
 //     }
 //   } catch (error) {
-//     dispatch(setAlert(error.message, 'error', 5000));
+//     dispatch(setAlert(error.message, 'error', 2000));
 //   }
 // };
 
 export const addReservation = reservation => async dispatch => {
   try {
     const token = localStorage.getItem('jwtToken');
-    const url = process.env.REACT_APP_BASE_URL + '/reservations';
+    const url = process.env.REACT_APP_BASE_RESERVATION_URL;
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -56,7 +56,7 @@ export const addReservation = reservation => async dispatch => {
     });
     if (response.ok) {
       const { reservation, QRCode } = await response.json();
-      dispatch(setAlert('Reservation Created', 'success', 5000));
+      dispatch(setAlert('Reservation Created', 'success', 2000));
       return {
         status: 'success',
         message: 'Reservation Created',
@@ -64,7 +64,7 @@ export const addReservation = reservation => async dispatch => {
       };
     }
   } catch (error) {
-    dispatch(setAlert(error.message, 'error', 5000));
+    dispatch(setAlert(error.message, 'error', 2000));
     return {
       status: 'error',
       message: ' Reservation have not been created, try again.'
@@ -75,7 +75,7 @@ export const addReservation = reservation => async dispatch => {
 export const updateReservation = (reservation, id) => async dispatch => {
   try {
     const token = localStorage.getItem('jwtToken');
-    const url = process.env.REACT_APP_BASE_URL + '/reservations/' + id;
+    const url = process.env.REACT_APP_BASE_RESERVATION_URL + '/' + id;
     const response = await fetch(url, {
       method: 'PATCH',
       headers: {
@@ -85,11 +85,11 @@ export const updateReservation = (reservation, id) => async dispatch => {
       body: JSON.stringify(reservation)
     });
     if (response.ok) {
-      dispatch(setAlert('Reservation Updated', 'success', 5000));
+      dispatch(setAlert('Reservation Updated', 'success', 2000));
       return { status: 'success', message: 'Reservation Updated' };
     }
   } catch (error) {
-    dispatch(setAlert(error.message, 'error', 5000));
+    dispatch(setAlert(error.message, 'error', 2000));
     return {
       status: 'error',
       message: ' Reservation have not been updated, try again.'
@@ -100,7 +100,7 @@ export const updateReservation = (reservation, id) => async dispatch => {
 export const removeReservation = id => async dispatch => {
   try {
     const token = localStorage.getItem('jwtToken');
-    const url = process.env.REACT_APP_BASE_URL + '/reservations/' + id;
+    const url = process.env.REACT_APP_BASE_RESERVATION_URL + '/' + id;
     const response = await fetch(url, {
       method: 'DELETE',
       headers: {
@@ -109,11 +109,11 @@ export const removeReservation = id => async dispatch => {
       }
     });
     if (response.ok) {
-      dispatch(setAlert('Reservation Deleted', 'success', 5000));
+      dispatch(setAlert('Reservation Deleted', 'success', 2000));
       return { status: 'success', message: 'Reservation Removed' };
     }
   } catch (error) {
-    dispatch(setAlert(error.message, 'error', 5000));
+    dispatch(setAlert(error.message, 'error', 2000));
     return {
       status: 'error',
       message: ' Reservation have not been deleted, try again.'

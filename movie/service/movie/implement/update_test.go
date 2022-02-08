@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"movie/config"
+	"movie/entities"
 	mocksRepo "movie/repository/mocks"
 	"movie/service/movie/implement"
 	"movie/service/movie/input"
@@ -12,6 +13,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestUpdateCinema(t *testing.T) {
@@ -30,10 +32,15 @@ func TestUpdateCinema(t *testing.T) {
 
 	t.Run("Success", func(t *testing.T) {
 		repo := &mocksRepo.Repository{}
+		storage := &mocksRepo.Storage{}
 
+		repo.On("Read", ctx, filters, mock.Anything).Return(nil).Run(func(args mock.Arguments) {
+			arg := args[2].(*entities.Movie)
+			arg.ID = mockInput.ID
+		})
 		repo.On("Update", ctx, filters, mockInput.ParseToEntities()).Return(nil)
 
-		service := implement.New(repo, uuid, appConfig)
+		service := implement.New(repo, uuid, appConfig, storage)
 		cinema, err := service.Update(ctx, mockInput)
 		assert.Nil(t, err)
 		assert.Equal(t, mockInput.ID, cinema.ID)
@@ -41,10 +48,15 @@ func TestUpdateCinema(t *testing.T) {
 
 	t.Run("Error", func(t *testing.T) {
 		repo := &mocksRepo.Repository{}
+		storage := &mocksRepo.Storage{}
 
+		repo.On("Read", ctx, filters, mock.Anything).Return(nil).Run(func(args mock.Arguments) {
+			arg := args[2].(*entities.Movie)
+			arg.ID = mockInput.ID
+		})
 		repo.On("Update", ctx, filters, mockInput.ParseToEntities()).Return(errors.New("error"))
 
-		service := implement.New(repo, uuid, appConfig)
+		service := implement.New(repo, uuid, appConfig, storage)
 		_, err := service.Update(ctx, mockInput)
 		assert.NotNil(t, err)
 	})
